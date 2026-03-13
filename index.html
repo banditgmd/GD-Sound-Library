@@ -61,10 +61,10 @@ header { text-align: center; padding: 40px 20px 20px; }
 }
 
 .header-subtitle {
-  font-size: clamp(16px, 3vw, 26px);
+  font-size: clamp(13px, 2.2vw, 20px);
   color: #FF94FF;
   text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   letter-spacing: 2px;
 }
 
@@ -73,7 +73,7 @@ header { text-align: center; padding: 40px 20px 20px; }
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 .stat-badge {
@@ -89,6 +89,20 @@ header { text-align: center; padding: 40px 20px 20px; }
   color: var(--gold);
   text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
 }
+
+.header-credits-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 1px;
+  margin-bottom: 24px;
+  transition: color 0.15s;
+}
+
+.header-credits-link:hover { color: rgba(255,255,255,0.75); }
 
 /* ---- layout ---- */
 
@@ -183,7 +197,7 @@ header { text-align: center; padding: 40px 20px 20px; }
   text-shadow: 1px 1px 0 #000;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   transition: filter 0.1s, transform 0.08s;
 }
 
@@ -198,19 +212,18 @@ header { text-align: center; padding: 40px 20px 20px; }
   text-shadow: none;
 }
 
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
 /* ---- search ---- */
 
 .search-wrap { position: relative; margin-bottom: 14px; }
-
-.search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.5;
-  pointer-events: none;
-  font-size: 16px;
-}
 
 #search {
   width: 100%;
@@ -221,7 +234,7 @@ header { text-align: center; padding: 40px 20px 20px; }
   font-family: 'Pusab', sans-serif;
   font-size: 14px;
   letter-spacing: 1px;
-  padding: 12px 16px 12px 42px;
+  padding: 12px 16px;
   outline: none;
   box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -296,12 +309,14 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 .card-top { display: flex; align-items: flex-start; gap: 10px; }
 
-.cat-icon {
-  font-size: 20px;
+/* colored dot replacing emoji icon */
+.cat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
   flex-shrink: 0;
-  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.8));
-  line-height: 1;
-  margin-top: 1px;
+  margin-top: 4px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.6);
 }
 
 .card-info { flex: 1; min-width: 0; }
@@ -421,7 +436,6 @@ header { text-align: center; padding: 40px 20px 20px; }
 /* ---- no results ---- */
 
 #no-results { display: none; text-align: center; padding: 60px 20px; }
-#no-results .emoji { font-size: 48px; margin-bottom: 12px; }
 #no-results p {
   font-size: 16px;
   letter-spacing: 1px;
@@ -515,18 +529,18 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
 <header>
   <div class="header-title shadow-lg">GD Sound Library</div>
-  <div class="header-subtitle">SFX Library — Version 109</div>
+  <div class="header-subtitle">250+ stock sounds ripped directly from Geometry Dash!</div>
   <div class="header-stats">
     <div class="stat-badge shadow-sm"><strong>260</strong> Sounds</div>
     <div class="stat-badge shadow-sm"><strong>16</strong> Categories</div>
-    <div class="stat-badge shadow-sm"><strong>.OGG</strong> Format</div>
   </div>
+  <a class="header-credits-link" href="#credits">Credits</a>
 </header>
 
 <div class="main-panel">
 
   <div class="dl-all-row">
-    <button class="gd-btn btn-green" id="btn-zip">⬇ Download All (260 Sounds)</button>
+    <button class="gd-btn btn-green" id="btn-zip">Download All (260 Sounds)</button>
   </div>
   <div id="zip-area">
     <div id="zip-msg">Packing...</div>
@@ -535,9 +549,8 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
   <div class="panel-box">
     <div class="panel-inner">
-      <div class="panel-title"><span>🔍 Search Sounds</span></div>
+      <div class="panel-title"><span>Search Sounds</span></div>
       <div class="search-wrap">
-        <span class="search-icon">🔍</span>
         <input id="search" type="text" placeholder="Search by name or category..." autocomplete="off" spellcheck="false"/>
       </div>
       <div class="cat-filters" id="cat-filters"></div>
@@ -550,13 +563,12 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
   <div id="grid"></div>
   <div id="no-results">
-    <div class="emoji">😵</div>
-    <p>No sounds found!</p>
+    <p>No sounds found.</p>
   </div>
 
 </div>
 
-<footer>
+<footer id="credits">
   <div class="footer-panel">
     <div class="footer-credits">
       Sound assets from
@@ -565,7 +577,7 @@ footer { text-align: center; padding: 28px 20px 40px; }
       SFX library archive by
       <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>
       &nbsp;·&nbsp;
-      Font &amp; theme by
+      Theme courtesy of
       <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a>
     </div>
     <div class="footer-note">Geometry Dash is a trademark of RobTop Games. Fan resource.</div>
@@ -582,11 +594,9 @@ const RAW_SOUNDS = [{"id":"3556","name":"Dive in Water 01","category":"Aquatic S
 
 const CATEGORIES = ["Aquatic Sounds","Construction and Demolition","Creatures","Events and Fanfares","Explosions and Destruction","Fire and Flames","Footsteps","Impacts and Hits","Interface","Machines and Robotics","Melodic Stingers","Objects","Retro Sounds","Spells and Magic","Voice","Weapons"];
 
-const EMOJI = {"Aquatic Sounds":"🌊","Construction and Demolition":"🏗️","Creatures":"🐉","Events and Fanfares":"🎺","Explosions and Destruction":"💥","Fire and Flames":"🔥","Footsteps":"👣","Impacts and Hits":"💢","Interface":"🖥️","Machines and Robotics":"🤖","Melodic Stingers":"🎵","Objects":"📦","Retro Sounds":"🕹️","Spells and Magic":"✨","Voice":"🗣️","Weapons":"⚔️"};
-
 const COLORS = {"Aquatic Sounds":"#00cfff","Construction and Demolition":"#ff8c42","Creatures":"#69f0ae","Events and Fanfares":"#ffd740","Explosions and Destruction":"#ff5252","Fire and Flames":"#ff6d00","Footsteps":"#d7ccc8","Impacts and Hits":"#ff6b6b","Interface":"#82b1ff","Machines and Robotics":"#90caf9","Melodic Stingers":"#ea80fc","Objects":"#ccff90","Retro Sounds":"#ffe57f","Spells and Magic":"#e040fb","Voice":"#80deea","Weapons":"#ef9a9a"};
 
-// pre-process once — avoids repeated string ops on every filter/render
+// pre-process once
 const sounds = RAW_SOUNDS.map(s => {
   const parts = s.category.split(' / ');
   return {
@@ -600,7 +610,7 @@ const sounds = RAW_SOUNDS.map(s => {
 });
 
 let activeCategory = 'All';
-let playing = null; // { audio, card }
+let playing = null;
 let toastTimer = null;
 let searchTimer = null;
 
@@ -610,10 +620,7 @@ function togglePlay(id) {
   const card = document.querySelector(`[data-id="${id}"]`);
   const sound = sounds.find(s => s.id === id);
 
-  if (playing?.card === card) {
-    stopCurrent();
-    return;
-  }
+  if (playing?.card === card) { stopCurrent(); return; }
 
   stopCurrent();
 
@@ -640,7 +647,6 @@ function setCardPlaying(card, on) {
   btn.textContent = on ? '■ Stop' : '▶ Play';
 }
 
-// stop audio if page is navigated away / hidden
 window.addEventListener('pagehide', stopCurrent);
 
 // ---- rendering ----
@@ -668,12 +674,10 @@ function render() {
   grid.style.display = '';
   noRes.style.display = 'none';
 
-  // batch all DOM writes into a fragment — single reflow instead of 260
   const frag = document.createDocumentFragment();
 
   filtered.forEach(s => {
     const color = COLORS[s.topCat] || 'rgba(255,255,255,0.3)';
-    const emoji = EMOJI[s.topCat] || '🔊';
 
     const card = document.createElement('div');
     card.className = 'card';
@@ -681,7 +685,7 @@ function render() {
     card.style.setProperty('--cat-accent', color);
     card.innerHTML = `
       <div class="card-top">
-        <div class="cat-icon">${emoji}</div>
+        <div class="cat-dot" style="background:${color}"></div>
         <div class="card-info">
           <div class="card-name" title="${s.name}">${s.name}</div>
           <div class="card-cat">${s.subLabel}</div>
@@ -707,13 +711,11 @@ function render() {
   grid.appendChild(frag);
 }
 
-// event delegation — one listener on the grid vs one per card
 document.getElementById('grid').addEventListener('click', e => {
   const btn = e.target.closest('.btn-play');
   if (btn) togglePlay(btn.closest('.card').dataset.id);
 });
 
-// debounced search — don't re-render on every single keystroke
 document.getElementById('search').addEventListener('input', () => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(render, 250);
@@ -726,7 +728,10 @@ function buildFilters() {
   ['All', ...CATEGORIES].forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'cat-pill' + (cat === 'All' ? ' active' : '');
-    btn.textContent = (cat === 'All' ? '🎵 ' : (EMOJI[cat] || '🔊') + ' ') + cat;
+    const color = COLORS[cat];
+    btn.innerHTML = color
+      ? `<span class="pill-dot" style="background:${color}"></span>${cat}`
+      : cat;
     btn.addEventListener('click', () => {
       activeCategory = cat;
       wrap.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
