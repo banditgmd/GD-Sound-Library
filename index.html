@@ -5,1080 +5,324 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>GD Sound Library</title>
 <style>
-@font-face {
-  font-family: 'Pusab';
-  src: url('https://gdcolon.com/assets/Pusab.ttf') format('truetype');
-  font-display: swap;
-}
-
-:root {
-  --brown-dark:   #2E1A0A;
-  --brown-mid:    #5C3A1E;
-  --brown-panel:  #3D200E;
-  --gold:         #FFC800;
-  --green-hi:     #7ADE2D;
-  --green-lo:     #5BB520;
-  --green-border: #3D7A10;
-  --green-shadow: #2A5510;
-  --blue-hi:      #5A7ACA;
-  --blue-lo:      #3A5AAA;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Pusab', 'Arial Black', sans-serif;
-  background: #287DFF url('https://gdcolon.com/assets/gdfont/bg.jpg') repeat fixed center / cover;
-  min-height: 100vh;
-  color: #fff;
-  overflow-x: hidden;
-}
-
-.shadow-lg {
-  text-shadow:
-    4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000,
-    0 4px 0 #000, 0 -4px 0 #000, 4px 0 0 #000, -4px 0 0 #000;
-}
-.shadow-sm {
-  text-shadow:
-    2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000,
-    0 2px 0 #000, 0 -2px 0 #000, 2px 0 0 #000, -2px 0 0 #000;
-}
+@font-face{font-family:'Pusab';src:url('https://gdcolon.com/assets/Pusab.ttf') format('truetype');font-display:swap}
+:root{--brown-dark:#2E1A0A;--brown-mid:#5C3A1E;--brown-panel:#3D200E;--gold:#FFC800;--green-hi:#7ADE2D;--green-lo:#5BB520;--green-border:#3D7A10;--green-shadow:#2A5510;--blue-hi:#5A7ACA;--blue-lo:#3A5AAA}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pusab','Arial Black',sans-serif;background:#287DFF url('https://gdcolon.com/assets/gdfont/bg.jpg') repeat fixed center/cover;min-height:100vh;color:#fff;overflow-x:hidden}
+.gd-text{text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000,0 2px 0 #000,0 -2px 0 #000,2px 0 0 #000,-2px 0 0 #000}
 
 /* ---- header ---- */
-
-header { text-align: center; padding: 40px 20px 20px; }
-
-.header-title {
-  font-size: clamp(36px, 7vw, 72px);
-  line-height: 1.1;
-  letter-spacing: 3px;
-  text-shadow:
-    4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000,
-    0 4px 0 #000, 0 -4px 0 #000, 4px 0 0 #000, -4px 0 0 #000,
-    0 0 20px rgba(255,200,0,0.4);
-  margin-bottom: 4px;
-}
-
-.header-subtitle {
-  font-size: clamp(13px, 2.2vw, 20px);
-  color: #FF94FF;
-  text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000;
-  margin-bottom: 12px;
-  letter-spacing: 2px;
-}
-
-.header-stats {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-.stat-badge {
-  background: rgba(0,0,0,0.4);
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 5px 16px;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-
-.stat-badge strong {
-  color: var(--gold);
-  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
-}
-
-.header-credits-link {
-  display: inline-block;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.4);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-  padding-bottom: 1px;
-  margin-bottom: 24px;
-  transition: color 0.15s;
-}
-
-.header-credits-link:hover { color: rgba(255,255,255,0.75); }
+header{text-align:center;padding:40px 20px 20px}
+.header-title{font-size:clamp(36px,7vw,72px);line-height:1.1;letter-spacing:3px;color:var(--gold);text-shadow:4px 4px 0 #000,-4px 4px 0 #000,4px -4px 0 #000,-4px -4px 0 #000,0 4px 0 #000,0 -4px 0 #000,4px 0 0 #000,-4px 0 0 #000,0 0 20px rgba(255,200,0,0.4);margin-bottom:4px}
+.header-subtitle{font-size:clamp(13px,2.2vw,20px);color:#FF94FF;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000;margin-bottom:12px;letter-spacing:2px}
+.header-stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat-badge{background:rgba(0,0,0,0.5);border:3px solid rgba(255,255,255,0.3);border-radius:20px;padding:5px 16px;font-size:13px;letter-spacing:1px;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
+.stat-badge strong{color:var(--gold)}
+.header-credits-link{display:inline-block;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.4);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;margin-bottom:24px;transition:color .15s}
+.header-credits-link:hover{color:rgba(255,255,255,0.75)}
 
 /* ---- loading ---- */
-
-#loading-screen {
-  text-align: center;
-  padding: 80px 20px;
-}
-
-.loading-spinner {
-  display: inline-block;
-  width: 40px; height: 40px;
-  border: 4px solid rgba(255,255,255,0.15);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 16px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-#loading-msg {
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.6);
-  text-shadow: 1px 1px 0 #000;
-}
+#loading-screen{text-align:center;padding:80px 20px}
+.loading-spinner{display:inline-block;width:40px;height:40px;border:5px solid rgba(255,255,255,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading-msg{font-size:14px;letter-spacing:1px;color:rgba(255,255,255,0.6);text-shadow:2px 2px 0 #000}
 
 /* ---- layout ---- */
+.main-panel{max-width:1260px;margin:0 auto 40px;padding:0 16px}
 
-.main-panel { max-width: 1260px; margin: 0 auto 40px; padding: 0 16px; }
+/* GD panel: black outline → white stroke → brown fill */
+.panel-box{background:#000;border-radius:16px;padding:4px;margin-bottom:20px;box-shadow:0 6px 0 rgba(0,0,0,0.4)}
+.panel-white{background:rgba(255,255,255,0.18);border-radius:13px;padding:3px}
+.panel-inner{background:var(--brown-panel);border-radius:10px;padding:18px}
+.panel-title{background:linear-gradient(to bottom,#8B5E2A,#6B4018);border:3px solid #000;border-radius:10px;text-align:center;padding:8px 16px;margin:-18px -18px 16px;box-shadow:inset 0 2px 0 rgba(255,255,255,0.25),0 4px 0 rgba(0,0,0,0.4)}
+.panel-title span{font-size:16px;letter-spacing:2px;color:var(--gold);text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
 
-.panel-box {
-  background: var(--brown-mid);
-  border: 4px solid var(--brown-dark);
-  border-radius: 14px;
-  box-shadow:
-    inset 0 3px 0 rgba(255,255,255,0.12),
-    inset 0 -3px 0 rgba(0,0,0,0.3),
-    0 6px 0 #1A0A04,
-    0 8px 20px rgba(0,0,0,0.5);
-  padding: 4px;
-  margin-bottom: 20px;
-}
+/* ---- tabs ---- */
+.tab-row{display:flex;justify-content:center;gap:12px;margin-bottom:20px}
+.tab-btn{font-family:'Pusab',sans-serif;font-size:15px;letter-spacing:1px;padding:12px 28px;border-radius:10px;cursor:pointer;border:3px solid #000;background:linear-gradient(to bottom,#4A5B8A,#323E6A);box-shadow:inset 0 3px 0 rgba(255,255,255,0.25),inset 0 -2px 0 rgba(0,0,0,0.3),0 5px 0 #111;color:#d0d8ff;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000;transition:filter .1s,transform .08s;user-select:none}
+.tab-btn:hover{filter:brightness(1.15)}
+.tab-btn:active{transform:translateY(3px);box-shadow:inset 0 3px 0 rgba(255,255,255,0.15),0 1px 0 #111}
+.tab-btn.active{background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));box-shadow:inset 0 3px 0 rgba(255,255,255,0.35),inset 0 -2px 0 rgba(0,0,0,0.2),0 5px 0 #1A3A08;color:#fff}
+.tab-content{display:none}.tab-content.active{display:block}
 
-.panel-inner {
-  background: var(--brown-panel);
-  border-radius: 10px;
-  border: 2px solid rgba(0,0,0,0.4);
-  padding: 18px;
-}
-
-.panel-title {
-  background: linear-gradient(to bottom, #8B5E2A, #6B4018);
-  border: 2px solid #3D2010;
-  border-bottom: 3px solid #2E1508;
-  border-radius: 8px;
-  text-align: center;
-  padding: 7px 16px;
-  margin: -18px -18px 16px;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.3);
-}
-
-.panel-title span {
-  font-size: 15px;
-  letter-spacing: 2px;
-  color: var(--gold);
-  text-shadow:
-    1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000,
-    0 0 12px rgba(255,200,0,0.5);
-}
-
-/* ---- tab switcher ---- */
-
-.tab-row {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.tab-btn {
-  font-family: 'Pusab', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  padding: 11px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 3px solid #1E2A4A;
-  background: linear-gradient(to bottom, #4A5B8A, #323E6A);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), 0 4px 0 #121A30;
-  color: #d0d8ff;
-  text-shadow: 1px 1px 0 #000;
-  transition: filter 0.1s, transform 0.08s;
-  user-select: none;
-}
-
-.tab-btn:hover { filter: brightness(1.15); }
-.tab-btn:active { transform: translateY(2px); }
-
-.tab-btn.active {
-  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
-  border-color: var(--green-border);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 4px 0 var(--green-shadow);
-  color: #1A3A08;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-}
-
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* ---- buttons ---- */
-
-.gd-btn {
-  font-family: 'Pusab', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 22px;
-  transition: filter 0.1s, transform 0.1s;
-  white-space: nowrap;
-  user-select: none;
-}
-
-.gd-btn:active { transform: translateY(2px); }
-
-.btn-green {
-  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
-  border: 3px solid var(--green-border);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 4px 0 var(--green-shadow), 0 5px 10px rgba(0,0,0,0.3);
-  color: #1A3A08;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-}
-
-.btn-green:hover { filter: brightness(1.1); }
-.btn-green:active { box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 1px 0 var(--green-shadow); }
-
-/* ---- category pills ---- */
-
-.cat-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.cat-pill {
-  font-family: 'Pusab', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.8px;
-  padding: 7px 14px;
-  border-radius: 7px;
-  cursor: pointer;
-  background: linear-gradient(to bottom, #4A5B8A, #323E6A);
-  border: 2px solid #1E2A4A;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), 0 3px 0 #121A30;
-  color: #d0d8ff;
-  text-shadow: 1px 1px 0 #000;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  transition: filter 0.1s, transform 0.08s;
-}
-
-.cat-pill:hover { filter: brightness(1.2); }
-.cat-pill:active { transform: translateY(1px); }
-
-.cat-pill.active {
-  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
-  border-color: var(--green-border);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 3px 0 var(--green-shadow);
-  color: #1A3A08;
-  text-shadow: none;
-}
-
-.pill-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: inline-block;
-  box-shadow: 0 0 4px rgba(0,0,0,0.5);
-}
+/* ---- category groups (subcategorized) ---- */
+.cat-filters{display:flex;flex-direction:column;gap:8px}
+.cat-group{background:rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
+.cat-group-title{font-family:'Pusab',sans-serif;font-size:13px;letter-spacing:1px;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#fff;background:rgba(0,0,0,0.25);user-select:none;transition:background .15s;text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000}
+.cat-group-title:hover{background:rgba(0,0,0,0.4)}
+.cat-group-title.active{background:rgba(122,222,45,0.15)}
+.cat-group-title .arrow{display:inline-block;transition:transform .2s;font-size:10px}
+.cat-group.open .arrow{transform:rotate(90deg)}
+.cat-group-title .grp-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,0.5)}
+.cat-group-title .grp-count{margin-left:auto;font-size:10px;color:rgba(255,255,255,0.35)}
+.cat-sub-pills{display:none;flex-wrap:wrap;gap:6px;padding:8px 12px}
+.cat-group.open .cat-sub-pills{display:flex}
+.cat-pill{font-family:'Pusab',sans-serif;font-size:10px;letter-spacing:.6px;padding:5px 12px;border-radius:7px;cursor:pointer;background:linear-gradient(to bottom,#4A5B8A,#323E6A);border:2px solid #000;box-shadow:inset 0 2px 0 rgba(255,255,255,0.18),0 2px 0 #0a0a1a;color:#d0d8ff;text-shadow:1px 1px 0 #000;transition:filter .1s,transform .08s}
+.cat-pill:hover{filter:brightness(1.2)}.cat-pill:active{transform:translateY(1px)}
+.cat-pill.active{background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),0 2px 0 var(--green-shadow);color:#fff}
+.cat-all-row{display:flex;margin-bottom:10px}
+.cat-pill-all{font-family:'Pusab',sans-serif;font-size:13px;letter-spacing:1px;padding:8px 24px;border-radius:8px;cursor:pointer;background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));border:3px solid #000;box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),0 3px 0 #1A3A08;color:#fff;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000;transition:filter .1s,transform .08s}
+.cat-pill-all:hover{filter:brightness(1.1)}.cat-pill-all:active{transform:translateY(2px)}
+.cat-pill-all.inactive{background:linear-gradient(to bottom,#4A5B8A,#323E6A);color:#d0d8ff}
 
 /* ---- search ---- */
+.search-wrap{position:relative;margin-bottom:14px}
+#search,#native-search{width:100%;background:rgba(0,0,0,0.45);border:3px solid #000;border-radius:10px;color:#fff;font-family:'Pusab',sans-serif;font-size:14px;letter-spacing:1px;padding:12px 16px;outline:none;box-shadow:inset 0 3px 8px rgba(0,0,0,0.5),0 2px 0 rgba(255,255,255,0.05);transition:border-color .15s;text-shadow:1px 1px 0 #000}
+#search::placeholder,#native-search::placeholder{color:rgba(255,255,255,0.3)}
+#search:focus,#native-search:focus{border-color:var(--gold);box-shadow:inset 0 3px 8px rgba(0,0,0,0.5),0 0 0 2px rgba(255,200,0,0.3)}
 
-.search-wrap { position: relative; margin-bottom: 14px; }
-
-#search, #native-search {
-  width: 100%;
-  background: rgba(0,0,0,0.35);
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  color: #fff;
-  font-family: 'Pusab', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  padding: 12px 16px;
-  outline: none;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-#search::placeholder, #native-search::placeholder { color: rgba(255,255,255,0.35); }
-
-#search:focus, #native-search:focus {
-  border-color: rgba(255,200,0,0.6);
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,200,0,0.2);
-}
-
-/* ---- results bar ---- */
-
-.results-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.results-count { font-size: 12px; letter-spacing: 1px; color: rgba(255,255,255,0.55); }
-.results-count strong { color: var(--gold); }
+/* ---- results ---- */
+.results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.results-count{font-size:13px;letter-spacing:1px;color:rgba(255,255,255,0.55);text-shadow:1px 1px 0 #000}
+.results-count strong{color:var(--gold)}
 
 /* ---- grid ---- */
+.sfx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 
-.sfx-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 12px;
-}
+/* ---- cards: GD chunky (black → white → brown) ---- */
+.card{background:#000;border-radius:14px;padding:3px;transition:transform .12s}
+.card:hover{transform:translateY(-2px)}
+.card-glow{background:rgba(255,255,255,0.18);border-radius:12px;padding:3px}
+.card-body{background:linear-gradient(to bottom,#3A2512,#2A180A);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.card-body::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cat-accent,rgba(255,255,255,0.1))}
+.card.playing .card-glow{animation:glowPulse 1.8s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{background:rgba(122,222,45,0.25)}50%{background:rgba(122,222,45,0.5)}}
+.card-top{display:flex;align-items:flex-start;gap:10px}
+.cat-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px;border:2px solid rgba(0,0,0,0.6)}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:14px;letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;color:#fff;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
+.card-cat{font-size:10px;letter-spacing:.5px;color:var(--cat-accent,rgba(255,255,255,0.5));text-shadow:1px 1px 0 rgba(0,0,0,0.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ---- cards ---- */
-
-.card {
-  background: linear-gradient(to bottom, #3A2512, #2A180A);
-  border: 2px solid #1A0C04;
-  border-radius: 10px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.07), 0 3px 0 #110804, 0 4px 12px rgba(0,0,0,0.35);
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: filter 0.12s, transform 0.12s;
-  position: relative;
-  overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--cat-accent, rgba(255,255,255,0.1));
-  opacity: 0.7;
-}
-
-.card:hover { filter: brightness(1.12); transform: translateY(-1px); }
-
-.card.playing {
-  border-color: var(--green-lo);
-  animation: cardGlow 1.8s ease-in-out infinite;
-}
-
-@keyframes cardGlow {
-  0%, 100% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.1), 0 3px 0 var(--green-shadow), 0 0 14px rgba(122,222,45,0.2); }
-  50%       { box-shadow: inset 0 2px 0 rgba(255,255,255,0.1), 0 3px 0 var(--green-shadow), 0 0 28px rgba(122,222,45,0.45); }
-}
-
-.card-top { display: flex; align-items: flex-start; gap: 10px; }
-
-.cat-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 4px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.6);
-}
-
-.card-info { flex: 1; min-width: 0; }
-
-.card-name {
-  font-size: 13px;
-  letter-spacing: 0.8px;
-  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 3px;
-}
-
-.card-cat {
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  color: var(--cat-accent, rgba(255,255,255,0.5));
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-actions { display: flex; gap: 10px; align-items: center; justify-content: center; }
-
-/* ---- GD sprite buttons (bare images) ---- */
-
-.btn-play {
-  height: 36px;
-  width: auto;
-  cursor: pointer;
-  transition: filter 0.1s, transform 0.08s;
-  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
-  user-select: none;
-  -webkit-user-drag: none;
-  flex-shrink: 0;
-}
-
-.btn-play:hover { filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5)) brightness(1.2); }
-.btn-play:active { transform: translateY(2px); filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.5)) brightness(0.95); }
-
-.btn-dl {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  text-decoration: none;
-  transition: filter 0.1s, transform 0.08s;
-}
-
-.btn-dl img {
-  height: 36px;
-  width: auto;
-  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
-  -webkit-user-drag: none;
-}
-
-.btn-dl:hover { filter: brightness(1.2); }
-.btn-dl:active { transform: translateY(2px); }
+/* ---- BIG GD sprite buttons ---- */
+.card-actions{display:flex;gap:14px;align-items:center;justify-content:center;padding:6px 0}
+.btn-play{height:52px;width:auto;cursor:pointer;transition:transform .08s,filter .1s;filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7));user-select:none;-webkit-user-drag:none}
+.btn-play:hover{filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7)) brightness(1.15);transform:scale(1.1)}
+.btn-play:active{transform:scale(0.92) translateY(3px);filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.7))}
+.btn-dl{display:inline-flex;align-items:center;flex-shrink:0;text-decoration:none;transition:transform .08s,filter .1s}
+.btn-dl img{height:52px;width:auto;filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7));-webkit-user-drag:none;cursor:pointer}
+.btn-dl:hover{transform:scale(1.1)}.btn-dl:hover img{filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7)) brightness(1.15)}
+.btn-dl:active{transform:scale(0.92) translateY(3px)}
 
 /* card footer */
-.card-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-
-.wave-bars {
-  display: none;
-  align-items: flex-end;
-  gap: 2px;
-  height: 16px;
-  margin-right: auto;
-}
-
-.card.playing .wave-bars { display: flex; }
-
-.wave-bar {
-  width: 3px;
-  background: var(--green-hi);
-  border-radius: 2px;
-  animation: wavebar 0.6s ease-in-out infinite alternate;
-  box-shadow: 0 0 4px rgba(122,222,45,0.6);
-}
-
-.wave-bar:nth-child(1) { animation-delay: 0s;    height: 40%; }
-.wave-bar:nth-child(2) { animation-delay: 0.1s;  height: 80%; }
-.wave-bar:nth-child(3) { animation-delay: 0.05s; height: 60%; }
-.wave-bar:nth-child(4) { animation-delay: 0.15s; height: 100%; }
-.wave-bar:nth-child(5) { animation-delay: 0.08s; height: 50%; }
-
-@keyframes wavebar { to { transform: scaleY(0.2); } }
-
-.card-id {
-  font-size: 9px;
-  color: rgba(255,255,255,0.22);
-  letter-spacing: 0.5px;
-  cursor: default;
-}
-
-.card-dur {
-  font-size: 9px;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 0.5px;
-}
+.card-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.wave-bars{display:none;align-items:flex-end;gap:2px;height:16px;margin-right:auto}
+.card.playing .wave-bars{display:flex}
+.wave-bar{width:3px;background:var(--green-hi);border-radius:2px;animation:wavebar .6s ease-in-out infinite alternate;box-shadow:0 0 4px rgba(122,222,45,0.6)}
+.wave-bar:nth-child(1){animation-delay:0s;height:40%}.wave-bar:nth-child(2){animation-delay:.1s;height:80%}.wave-bar:nth-child(3){animation-delay:.05s;height:60%}.wave-bar:nth-child(4){animation-delay:.15s;height:100%}.wave-bar:nth-child(5){animation-delay:.08s;height:50%}
+@keyframes wavebar{to{transform:scaleY(0.2)}}
+.card-id{font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+.card-dur{font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:.5px}
 
 /* ---- load more ---- */
-
-.load-more-row { text-align: center; margin-top: 20px; }
-
-#btn-load-more {
-  font-family: 'Pusab', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  padding: 12px 36px;
-  border-radius: 8px;
-  cursor: pointer;
-  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
-  border: 3px solid var(--green-border);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 4px 0 var(--green-shadow), 0 5px 10px rgba(0,0,0,0.3);
-  color: #1A3A08;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-  transition: filter 0.1s, transform 0.1s;
-}
-
-#btn-load-more:hover { filter: brightness(1.1); }
-#btn-load-more:active { transform: translateY(2px); }
+.load-more-row{text-align:center;margin-top:20px}
+#btn-load-more{font-family:'Pusab',sans-serif;font-size:15px;letter-spacing:1px;padding:14px 40px;border-radius:12px;cursor:pointer;background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));border:3px solid #000;box-shadow:inset 0 3px 0 rgba(255,255,255,0.35),0 5px 0 #1A3A08;color:#fff;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000;transition:filter .1s,transform .1s}
+#btn-load-more:hover{filter:brightness(1.1)}#btn-load-more:active{transform:translateY(3px);box-shadow:inset 0 3px 0 rgba(255,255,255,0.2),0 1px 0 #1A3A08}
 
 /* ---- no results ---- */
+.no-results{display:none;text-align:center;padding:60px 20px}
+.no-results p{font-size:16px;letter-spacing:1px;color:rgba(255,255,255,0.5);text-shadow:2px 2px 0 #000}
 
-.no-results { display: none; text-align: center; padding: 60px 20px; }
-.no-results p {
-  font-size: 16px;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.5);
-  text-shadow: 1px 1px 0 #000;
-}
-
-/* ---- zip bar ---- */
-
-.dl-all-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-
-.zip-area { text-align: center; margin-top: 10px; display: none; }
-
-.zip-msg {
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: var(--green-hi);
-  text-shadow: 1px 1px 0 #000;
-  margin-bottom: 6px;
-}
-
-.zip-bar-wrap {
-  height: 8px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.1);
-  overflow: hidden;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.zip-bar {
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--green-hi), var(--green-lo));
-  border-radius: 100px;
-  transition: width 0.1s;
-  box-shadow: 0 0 8px rgba(122,222,45,0.5);
-}
-
-/* ---- native panel accent ---- */
-
-.native-accent { border-color: #6A3DAA; }
-.native-accent .panel-inner { border-color: rgba(106,61,170,0.4); }
-.native-accent .panel-title {
-  background: linear-gradient(to bottom, #6A3DAA, #4A2080);
-  border-color: #2E1050;
-}
+/* ---- native accent ---- */
+.native-accent{background:#1A0040!important}
+.native-accent .panel-white{background:rgba(200,150,255,0.15)}
+.native-accent .panel-title{background:linear-gradient(to bottom,#6A3DAA,#4A2080)}
 
 /* ---- footer ---- */
-
-footer { text-align: center; padding: 28px 20px 40px; }
-
-.footer-panel {
-  display: inline-block;
-  background: rgba(0,0,0,0.4);
-  border: 2px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 14px 28px;
-  max-width: 700px;
-}
-
-.footer-credits { font-size: 11px; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); line-height: 2; }
-.footer-credits a { color: var(--gold); text-decoration: none; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); transition: color 0.15s; }
-.footer-credits a:hover { color: #fff; }
-.footer-note { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 8px; letter-spacing: 0.5px; }
+footer{text-align:center;padding:28px 20px 40px}
+.footer-panel{display:inline-block;background:rgba(0,0,0,0.5);border:3px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 28px;max-width:700px}
+.footer-credits{font-size:11px;letter-spacing:.8px;color:rgba(255,255,255,0.5);line-height:2}
+.footer-credits a{color:var(--gold);text-decoration:none;text-shadow:1px 1px 0 rgba(0,0,0,0.8);transition:color .15s}
+.footer-credits a:hover{color:#fff}
+.footer-note{font-size:10px;color:rgba(255,255,255,0.2);margin-top:8px;letter-spacing:.5px}
 
 /* ---- toast ---- */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:#000;border:3px solid var(--gold);border-radius:10px;padding:10px 22px;font-size:13px;letter-spacing:1px;color:var(--gold);text-shadow:1px 1px 0 #000;box-shadow:0 4px 0 rgba(0,0,0,0.4);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-#toast {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background: var(--brown-dark);
-  border: 2px solid rgba(255,200,0,0.4);
-  border-radius: 8px;
-  padding: 10px 22px;
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: var(--gold);
-  text-shadow: 1px 1px 0 #000;
-  box-shadow: 0 4px 0 #1A0A04, 0 6px 20px rgba(0,0,0,0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s, transform 0.25s;
-  z-index: 999;
-  white-space: nowrap;
-}
-
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-@media (max-width: 580px) {
-  .sfx-grid { grid-template-columns: 1fr; }
-  .header-title { font-size: 32px; }
-  .tab-btn { font-size: 12px; padding: 9px 16px; }
-}
+@media(max-width:580px){.sfx-grid{grid-template-columns:1fr}.header-title{font-size:32px}.tab-btn{font-size:12px;padding:9px 16px}.btn-play,.btn-dl img{height:44px}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-title shadow-lg">GD Sound Library</div>
+  <div class="header-title">GD Sound Library</div>
   <div class="header-subtitle" id="header-sub">The complete Geometry Dash sound effects library!</div>
-  <div class="header-stats" id="header-stats">
-    <div class="stat-badge shadow-sm"><strong id="stat-stock">...</strong> Stock SFX</div>
-    <div class="stat-badge shadow-sm"><strong id="stat-native">27</strong> Native Sounds</div>
-    <div class="stat-badge shadow-sm"><strong id="stat-cats">...</strong> Categories</div>
-  </div>
+  <div class="header-stats"><div class="stat-badge"><strong id="stat-stock">...</strong> Stock SFX</div><div class="stat-badge"><strong id="stat-native">27</strong> Native Sounds</div><div class="stat-badge"><strong id="stat-cats">...</strong> Categories</div></div>
   <a class="header-credits-link" href="#credits">Credits</a>
 </header>
-
 <div class="main-panel">
+  <div class="tab-row"><button class="tab-btn active" data-tab="stock">Stock SFX Library</button><button class="tab-btn" data-tab="native">Native Game Sounds</button></div>
 
-  <!-- Tab Switcher -->
-  <div class="tab-row">
-    <button class="tab-btn active" data-tab="stock">Stock SFX Library</button>
-    <button class="tab-btn" data-tab="native">Native Game Sounds</button>
-  </div>
-
-  <!-- ======================== STOCK SFX TAB ======================== -->
   <div class="tab-content active" id="tab-stock">
-
-    <div id="loading-screen">
-      <div class="loading-spinner"></div>
-      <div id="loading-msg">Loading SFX catalog...</div>
-    </div>
-
-    <div id="stock-ui" style="display:none;">
-
-      <div class="panel-box">
-        <div class="panel-inner">
-          <div class="panel-title"><span>Search Sounds</span></div>
-          <div class="search-wrap">
-            <input id="search" type="text" placeholder="Search by name, category, or ID..." autocomplete="off" spellcheck="false"/>
-          </div>
-          <div class="cat-filters" id="cat-filters"></div>
-        </div>
-      </div>
-
-      <div class="results-bar">
-        <div class="results-count" id="results-count"></div>
-      </div>
-
+    <div id="loading-screen"><div class="loading-spinner"></div><div id="loading-msg">Loading SFX catalog...</div></div>
+    <div id="stock-ui" style="display:none">
+      <div class="panel-box"><div class="panel-white"><div class="panel-inner">
+        <div class="panel-title"><span>Search &amp; Filter</span></div>
+        <div class="search-wrap"><input id="search" type="text" placeholder="Search by name, category, or ID..." autocomplete="off" spellcheck="false"/></div>
+        <div class="cat-all-row"><button class="cat-pill-all" id="btn-cat-all">Show All</button></div>
+        <div class="cat-filters" id="cat-filters"></div>
+      </div></div></div>
+      <div class="results-bar"><div class="results-count" id="results-count"></div></div>
       <div class="sfx-grid" id="grid"></div>
       <div class="no-results" id="no-results"><p>No sounds found.</p></div>
-
-      <div class="load-more-row" id="load-more-row" style="display:none;">
-        <button id="btn-load-more">Load More</button>
-      </div>
+      <div class="load-more-row" id="load-more-row" style="display:none"><button id="btn-load-more">Load More</button></div>
     </div>
   </div>
 
-  <!-- ======================== NATIVE SOUNDS TAB ======================== -->
   <div class="tab-content" id="tab-native">
-
-    <div class="panel-box native-accent">
-      <div class="panel-inner">
-        <div class="panel-title"><span>Native Game Sounds</span></div>
-        <p style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:14px;letter-spacing:0.8px;">
-          Built-in sounds that ship with Geometry Dash — death, menus, achievements, vaults, and more.
-        </p>
-        <div class="search-wrap">
-          <input id="native-search" type="text" placeholder="Search native sounds..." autocomplete="off" spellcheck="false"/>
-        </div>
-      </div>
-    </div>
-
+    <div class="panel-box native-accent"><div class="panel-white"><div class="panel-inner">
+      <div class="panel-title"><span>Native Game Sounds</span></div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:14px;letter-spacing:.8px;text-shadow:1px 1px 0 #000">Built-in sounds that ship with Geometry Dash — death, menus, achievements, vaults, and more.</p>
+      <div class="search-wrap"><input id="native-search" type="text" placeholder="Search native sounds..." autocomplete="off" spellcheck="false"/></div>
+    </div></div></div>
     <div class="sfx-grid" id="native-grid"></div>
     <div class="no-results" id="native-no-results"><p>No native sounds found.</p></div>
   </div>
-
 </div>
 
-<footer id="credits">
-  <div class="footer-panel">
-    <div class="footer-credits" id="footer-credits">
-      Sound assets &amp; SFX library by
-      <a href="https://robtopgames.com" target="_blank" rel="noopener">RobTop Games</a>
-      &nbsp;·&nbsp;
-      SFX library docs by
-      <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a>
-      &nbsp;·&nbsp;
-      Archive by
-      <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>
-      &nbsp;·&nbsp;
-      Theme courtesy of
-      <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a>
-    </div>
-    <div class="footer-note">Geometry Dash is a trademark of RobTop Games. Fan resource.</div>
-  </div>
-</footer>
-
+<footer id="credits"><div class="footer-panel">
+  <div class="footer-credits" id="footer-credits">Sound assets &amp; SFX library by <a href="https://robtopgames.com" target="_blank">RobTop Games</a> · SFX library docs by <a href="https://boomlings.dev" target="_blank">GD Docs</a> · Archive by <a href="https://cvolton.eu/sfx/" target="_blank">cvolton</a> · Theme courtesy of <a href="https://gdcolon.com" target="_blank">GD Colon</a></div>
+  <div class="footer-note">Geometry Dash is a trademark of RobTop Games. Fan resource.</div>
+</div></footer>
 <div id="toast"></div>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-const CATALOG_URL   = 'sfx_catalog.json';
-const STOCK_PATH    = 'sfx/stock/';
-const NATIVE_PATH   = 'sfx/native/';
-const ASSET_PATH    = 'assets/';
-const PAGE_SIZE     = 120;
+const CATALOG_URL='sfx_catalog.json',STOCK_PATH='sfx/stock/',NATIVE_PATH='sfx/native/',ASSET_PATH='assets/',PAGE_SIZE=120;
+const IMG_PLAY=ASSET_PATH+'GJ_playMusicBtn_001.png',IMG_STOP=ASSET_PATH+'GJ_stopMusicBtn_001.png',IMG_DL=ASSET_PATH+'GJ_downloadBtn_001.png';
+const PALETTE=['#00cfff','#ff8c42','#69f0ae','#ffd740','#ff5252','#ff6d00','#d7ccc8','#ff6b6b','#82b1ff','#90caf9','#ea80fc','#ccff90','#ffe57f','#e040fb','#80deea','#ef9a9a','#a5d6a7','#ffab91','#b39ddb','#f48fb1','#81d4fa','#c5e1a5','#fff59d','#bcaaa4','#80cbc4','#ce93d8','#ffcc80','#9fa8da','#b0bec5','#eee'];
+const NATIVE_SOUNDS=[
+{file:'achievement_01.ogg',name:'Achievement Unlocked',cat:'Notification'},{file:'buyItem01.ogg',name:'Shop Purchase 1',cat:'Shop'},{file:'buyItem03.ogg',name:'Shop Purchase 2',cat:'Shop'},{file:'chest07.ogg',name:'Chest Reward 1',cat:'Chest'},{file:'chest08.ogg',name:'Chest Reward 2',cat:'Chest'},{file:'chestClick.ogg',name:'Chest Click',cat:'Chest'},{file:'chestLand.ogg',name:'Chest Landing',cat:'Chest'},{file:'chestOpen01.ogg',name:'Chest Open',cat:'Chest'},{file:'counter003.ogg',name:'Counter Tick',cat:'UI'},{file:'crystal01.ogg',name:'Crystal Collect',cat:'Collect'},{file:'door001.ogg',name:'Vault Door 1',cat:'Door'},{file:'door01.ogg',name:'Door Open',cat:'Door'},{file:'door02.ogg',name:'Door Close',cat:'Door'},{file:'endStart_02.ogg',name:'Level Complete Fanfare',cat:'Level'},{file:'explode_11.ogg',name:'Death Explosion',cat:'Level'},{file:'gold01.ogg',name:'Gold Collect 1',cat:'Collect'},{file:'gold02.ogg',name:'Gold Collect 2',cat:'Collect'},{file:'grunt01.ogg',name:'Grunt 1',cat:'Voice'},{file:'grunt02.ogg',name:'Grunt 2',cat:'Voice'},{file:'grunt03.ogg',name:'Grunt 3',cat:'Voice'},{file:'highscoreGet02.ogg',name:'Highscore / Coin Tally',cat:'Level'},{file:'magicExplosion.ogg',name:'Magic Explosion',cat:'Effect'},{file:'playSound_01.ogg',name:'Play Button',cat:'UI'},{file:'quitSound_01.ogg',name:'Quit / Back',cat:'UI'},{file:'reward01.ogg',name:'Reward Unlock',cat:'Notification'},{file:'secretKey.ogg',name:'Secret Key Collect',cat:'Collect'},{file:'unlockPath.ogg',name:'Path Unlock',cat:'Notification'}];
 
-// ─── SPRITE URLS ─────────────────────────────────────────────────────────────
-const IMG_PLAY = ASSET_PATH + 'GJ_playMusicBtn_001.png';
-const IMG_STOP = ASSET_PATH + 'GJ_stopMusicBtn_001.png';
-const IMG_DL   = ASSET_PATH + 'GJ_downloadBtn_001.png';
+let allSounds=[],topCategories=[],catColors={},subCatMap={},filtered=[],displayCount=0,activeCategory='All',playing=null,toastTimer=null,searchTimer=null;
 
-// ─── CATEGORY COLORS ─────────────────────────────────────────────────────────
-const PALETTE = [
-  '#00cfff','#ff8c42','#69f0ae','#ffd740','#ff5252','#ff6d00','#d7ccc8',
-  '#ff6b6b','#82b1ff','#90caf9','#ea80fc','#ccff90','#ffe57f','#e040fb',
-  '#80deea','#ef9a9a','#a5d6a7','#ffab91','#b39ddb','#f48fb1','#81d4fa',
-  '#c5e1a5','#fff59d','#bcaaa4','#80cbc4','#ce93d8','#ffcc80','#9fa8da',
-  '#b0bec5','#eeeeee'
-];
-
-// ─── NATIVE SOUNDS ───────────────────────────────────────────────────────────
-const NATIVE_SOUNDS = [
-  { file:'achievement_01.ogg',  name:'Achievement Unlocked',        cat:'Notification' },
-  { file:'buyItem01.ogg',       name:'Shop Purchase 1',             cat:'Shop' },
-  { file:'buyItem03.ogg',       name:'Shop Purchase 2',             cat:'Shop' },
-  { file:'chest07.ogg',         name:'Chest Reward 1',              cat:'Chest' },
-  { file:'chest08.ogg',         name:'Chest Reward 2',              cat:'Chest' },
-  { file:'chestClick.ogg',      name:'Chest Click',                 cat:'Chest' },
-  { file:'chestLand.ogg',       name:'Chest Landing',               cat:'Chest' },
-  { file:'chestOpen01.ogg',     name:'Chest Open',                  cat:'Chest' },
-  { file:'counter003.ogg',      name:'Counter Tick',                cat:'UI' },
-  { file:'crystal01.ogg',       name:'Crystal Collect',             cat:'Collect' },
-  { file:'door001.ogg',         name:'Vault Door 1',                cat:'Door' },
-  { file:'door01.ogg',          name:'Door Open',                   cat:'Door' },
-  { file:'door02.ogg',          name:'Door Close',                  cat:'Door' },
-  { file:'endStart_02.ogg',     name:'Level Complete Fanfare',      cat:'Level' },
-  { file:'explode_11.ogg',      name:'Death Explosion',             cat:'Level' },
-  { file:'gold01.ogg',          name:'Gold Collect 1',              cat:'Collect' },
-  { file:'gold02.ogg',          name:'Gold Collect 2',              cat:'Collect' },
-  { file:'grunt01.ogg',         name:'Grunt 1',                     cat:'Voice' },
-  { file:'grunt02.ogg',         name:'Grunt 2',                     cat:'Voice' },
-  { file:'grunt03.ogg',         name:'Grunt 3',                     cat:'Voice' },
-  { file:'highscoreGet02.ogg',  name:'Highscore / Coin Tally',     cat:'Level' },
-  { file:'magicExplosion.ogg',  name:'Magic Explosion',             cat:'Effect' },
-  { file:'playSound_01.ogg',    name:'Play Button',                 cat:'UI' },
-  { file:'quitSound_01.ogg',    name:'Quit / Back',                 cat:'UI' },
-  { file:'reward01.ogg',        name:'Reward Unlock',               cat:'Notification' },
-  { file:'secretKey.ogg',       name:'Secret Key Collect',          cat:'Collect' },
-  { file:'unlockPath.ogg',      name:'Path Unlock',                 cat:'Notification' },
-];
-
-// ─── STATE ───────────────────────────────────────────────────────────────────
-let allSounds = [];
-let topCategories = [];
-let catColors = {};
-let filtered = [];
-let displayCount = 0;
-let activeCategory = 'All';
-let playing = null;
-let toastTimer = null;
-let searchTimer = null;
-
-// ─── FETCH & DECODE SFX LIBRARY ─────────────────────────────────────────────
-
-async function loadLibrary() {
-  const msg = document.getElementById('loading-msg');
-
-  try {
-    msg.textContent = 'Loading SFX catalog...';
-    const resp = await fetch(CATALOG_URL);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const catalog = await resp.json();
-
-    msg.textContent = 'Building sound library...';
-
-    // Build allSounds from catalog
-    const topCatSet = new Set();
-    allSounds = catalog.sounds.map(s => {
-      const cat = s.cat || 'Uncategorized';
-      const top = cat.split(' / ')[0];
-      topCatSet.add(top);
-      return {
-        id: String(s.id),
-        name: s.name,
-        category: cat,
-        topCat: top,
-        subLabel: cat.includes(' / ') ? cat.split(' / ').slice(1).join(' › ') : cat,
-        size: s.size,
-        dur: s.dur ? String(s.dur) : '',
-        orig: `s${s.id}.ogg`,
-        url: STOCK_PATH + `s${s.id}.ogg`,
-        _name: s.name.toLowerCase(),
-        _cat: cat.toLowerCase(),
-      };
+async function loadLibrary(){
+  const msg=document.getElementById('loading-msg');
+  try{
+    msg.textContent='Loading SFX catalog...';
+    const resp=await fetch(CATALOG_URL);
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const catalog=await resp.json();
+    msg.textContent='Building sound library...';
+    const topSet=new Set(),subMap={};
+    allSounds=catalog.sounds.map(s=>{
+      const cat=s.cat||'Uncategorized',parts=cat.split(' / '),top=parts[0],sub=parts.length>1?parts.slice(1).join(' / '):null;
+      topSet.add(top);if(!subMap[top])subMap[top]=new Set();if(sub)subMap[top].add(sub);
+      return{id:String(s.id),name:s.name,category:cat,topCat:top,subLabel:sub||top,size:s.size,dur:s.dur?String(s.dur):'',orig:'s'+s.id+'.ogg',url:STOCK_PATH+'s'+s.id+'.ogg',_name:s.name.toLowerCase(),_cat:cat.toLowerCase()};
     });
-
-    topCategories = [...topCatSet].sort();
-    topCategories.forEach((cat, i) => {
-      catColors[cat] = PALETTE[i % PALETTE.length];
-    });
-
-    allSounds.sort((a, b) => a.name.localeCompare(b.name));
-
-    // Credits
-    if (catalog.credits && catalog.credits.length) {
-      const creditsEl = document.getElementById('footer-credits');
-      let credHtml = 'Licensed SFX from: ';
-      credHtml += catalog.credits.map(c =>
-        `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`
-      ).join(' · ');
-      credHtml += '<br>Theme by <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a> · ' +
-        'Docs by <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a> · ' +
-        'Archive by <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>';
-      creditsEl.innerHTML = credHtml;
-    }
-
-    // Done
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('stock-ui').style.display = '';
-    updateStats();
-    buildFilters();
-    render();
-  } catch (err) {
-    msg.textContent = 'Failed to load SFX catalog. Try refreshing!';
-    console.error('Library load error:', err);
-  }
+    topCategories=[...topSet].sort();
+    topCategories.forEach((c,i)=>catColors[c]=PALETTE[i%PALETTE.length]);
+    subCatMap={};for(const[t,s]of Object.entries(subMap))subCatMap[t]=[...s].sort();
+    allSounds.sort((a,b)=>a.name.localeCompare(b.name));
+    if(catalog.credits?.length){const el=document.getElementById('footer-credits');let h='Licensed SFX from: '+catalog.credits.map(c=>'<a href="'+c.url+'" target="_blank">'+c.name+'</a>').join(' · ')+'<br>Theme by <a href="https://gdcolon.com" target="_blank">GD Colon</a> · Docs by <a href="https://boomlings.dev" target="_blank">GD Docs</a> · Archive by <a href="https://cvolton.eu/sfx/" target="_blank">cvolton</a>';el.innerHTML=h;}
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('stock-ui').style.display='';
+    document.getElementById('stat-stock').textContent=allSounds.length.toLocaleString();
+    document.getElementById('stat-cats').textContent=topCategories.length;
+    document.getElementById('header-sub').textContent=allSounds.length.toLocaleString()+'+ stock sounds from the full Geometry Dash SFX library!';
+    buildFilters();render();
+  }catch(err){msg.textContent='Failed to load catalog. Try refreshing!';console.error(err);}
 }
 
-// ─── STATS ───────────────────────────────────────────────────────────────────
-
-function updateStats() {
-  document.getElementById('stat-stock').textContent = allSounds.length.toLocaleString();
-  document.getElementById('stat-cats').textContent = topCategories.length;
-  document.getElementById('header-sub').textContent =
-    `${allSounds.length.toLocaleString()}+ stock sounds from the full Geometry Dash SFX library!`;
-}
-
-// ─── AUDIO ───────────────────────────────────────────────────────────────────
-
-function togglePlay(url, card) {
-  if (playing?.card === card) { stopCurrent(); return; }
+function togglePlay(url,card){
+  if(playing?.card===card){stopCurrent();return;}
   stopCurrent();
-
-  const audio = new Audio(url);
-  audio.onended = () => { setCardPlaying(card, false); playing = null; };
-  audio.onerror = () => { showToast('Could not load audio!'); setCardPlaying(card, false); playing = null; };
-  audio.play();
-
-  playing = { audio, card };
-  setCardPlaying(card, true);
+  const audio=new Audio(url);
+  audio.onended=()=>{setP(card,false);playing=null;};
+  audio.onerror=()=>{showToast('Could not load audio!');setP(card,false);playing=null;};
+  audio.play();playing={audio,card};setP(card,true);
 }
+function stopCurrent(){if(!playing)return;playing.audio.pause();setP(playing.card,false);playing=null;}
+function setP(card,on){card.classList.toggle('playing',on);const img=card.querySelector('.btn-play');if(img)img.src=on?IMG_STOP:IMG_PLAY;}
+window.addEventListener('pagehide',stopCurrent);
 
-function stopCurrent() {
-  if (!playing) return;
-  playing.audio.pause();
-  setCardPlaying(playing.card, false);
-  playing = null;
-}
-
-function setCardPlaying(card, on) {
-  card.classList.toggle('playing', on);
-  const img = card.querySelector('.btn-play');
-  if (img) img.src = on ? IMG_STOP : IMG_PLAY;
-}
-
-window.addEventListener('pagehide', stopCurrent);
-
-// ─── CARD HTML ───────────────────────────────────────────────────────────────
-
-function makeCard(s, color, isNative) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.dataset.url = isNative ? (NATIVE_PATH + s.file) : s.url;
-  card.style.setProperty('--cat-accent', color);
-
-  const dlFile = isNative ? s.file : s.orig;
-  const dlUrl = isNative ? (NATIVE_PATH + s.file) : s.url;
-  const catLabel = isNative ? s.cat : s.subLabel;
-  const idLabel = isNative ? s.file : s.orig;
-  const durLabel = s.dur ? `${s.dur}s` : '';
-
-  card.innerHTML = `
-    <div class="card-top">
-      <div class="cat-dot" style="background:${color}"></div>
-      <div class="card-info">
-        <div class="card-name" title="${s.name}">${s.name}</div>
-        <div class="card-cat">${catLabel}</div>
-      </div>
-    </div>
-    <div class="card-actions">
-      <img class="btn-play" src="${IMG_PLAY}" alt="Play">
-      <a class="btn-dl" href="${dlUrl}" download="${dlFile}" title="Download"><img src="${IMG_DL}" alt="Download"></a>
-    </div>
-    <div class="card-footer">
-      <div class="wave-bars">
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-      </div>
-      ${durLabel ? `<div class="card-dur">${durLabel}</div>` : ''}
-      <div class="card-id">${idLabel}</div>
-    </div>
-  `;
+function makeCard(s,color,isNative){
+  const card=document.createElement('div');card.className='card';
+  card.dataset.url=isNative?(NATIVE_PATH+s.file):s.url;
+  card.style.setProperty('--cat-accent',color);
+  const dlFile=isNative?s.file:s.orig,dlUrl=isNative?(NATIVE_PATH+s.file):s.url;
+  const catLabel=isNative?s.cat:s.subLabel,idLabel=isNative?s.file:s.orig;
+  const durLabel=s.dur?s.dur+'s':'';
+  card.innerHTML='<div class="card-glow"><div class="card-body">'
+    +'<div class="card-top"><div class="cat-dot" style="background:'+color+'"></div>'
+    +'<div class="card-info"><div class="card-name" title="'+s.name+'">'+s.name+'</div><div class="card-cat">'+catLabel+'</div></div></div>'
+    +'<div class="card-actions"><img class="btn-play" src="'+IMG_PLAY+'" alt="Play">'
+    +'<a class="btn-dl" href="'+dlUrl+'" download="'+dlFile+'"><img src="'+IMG_DL+'" alt="Download"></a></div>'
+    +'<div class="card-footer"><div class="wave-bars"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>'
+    +(durLabel?'<div class="card-dur">'+durLabel+'</div>':'')
+    +'<div class="card-id">'+idLabel+'</div></div></div></div>';
   return card;
 }
 
-// ─── STOCK RENDERING (paginated) ─────────────────────────────────────────────
-
-function applyFilter() {
-  const q = document.getElementById('search').value.toLowerCase().trim();
-  filtered = allSounds.filter(s => {
-    if (activeCategory !== 'All' && s.topCat !== activeCategory) return false;
-    if (q && !s._name.includes(q) && !s._cat.includes(q) && !s.orig.includes(q)) return false;
+function applyFilter(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  filtered=allSounds.filter(s=>{
+    if(activeCategory!=='All'&&s.category!==activeCategory&&s.topCat!==activeCategory)return false;
+    if(q&&!s._name.includes(q)&&!s._cat.includes(q)&&!s.orig.includes(q))return false;
     return true;
-  });
-  displayCount = 0;
+  });displayCount=0;
+}
+function render(){applyFilter();document.getElementById('grid').innerHTML='';displayCount=0;showMore();}
+function showMore(){
+  const grid=document.getElementById('grid'),noRes=document.getElementById('no-results'),loadRow=document.getElementById('load-more-row'),btn=document.getElementById('btn-load-more');
+  const end=Math.min(displayCount+PAGE_SIZE,filtered.length),frag=document.createDocumentFragment();
+  for(let i=displayCount;i<end;i++){const s=filtered[i];frag.appendChild(makeCard(s,catColors[s.topCat]||'rgba(255,255,255,0.3)',false));}
+  grid.appendChild(frag);displayCount=end;
+  noRes.style.display=filtered.length===0?'block':'none';
+  grid.style.display=filtered.length===0?'none':'';
+  if(displayCount<filtered.length){loadRow.style.display='';btn.textContent='Load More ('+(filtered.length-displayCount).toLocaleString()+' remaining)';}else{loadRow.style.display='none';}
+  document.getElementById('results-count').innerHTML='Showing <strong>'+displayCount.toLocaleString()+'</strong> of <strong>'+filtered.length.toLocaleString()+'</strong> sounds';
 }
 
-function render() {
-  applyFilter();
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  displayCount = 0;
-  showMore();
+document.getElementById('grid').addEventListener('click',e=>{const b=e.target.closest('.btn-play');if(b)togglePlay(b.closest('.card').dataset.url,b.closest('.card'));});
+document.getElementById('search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(render,300);});
+document.getElementById('btn-load-more').addEventListener('click',showMore);
 
-  document.getElementById('results-count').innerHTML =
-    `Showing <strong>${Math.min(displayCount, filtered.length)}</strong> of <strong>${filtered.length.toLocaleString()}</strong> sounds`;
-}
-
-function showMore() {
-  const grid = document.getElementById('grid');
-  const noRes = document.getElementById('no-results');
-  const loadRow = document.getElementById('load-more-row');
-  const btn = document.getElementById('btn-load-more');
-
-  const end = Math.min(displayCount + PAGE_SIZE, filtered.length);
-  const frag = document.createDocumentFragment();
-
-  for (let i = displayCount; i < end; i++) {
-    const s = filtered[i];
-    const color = catColors[s.topCat] || 'rgba(255,255,255,0.3)';
-    frag.appendChild(makeCard(s, color, false));
-  }
-
-  grid.appendChild(frag);
-  displayCount = end;
-
-  noRes.style.display = filtered.length === 0 ? 'block' : 'none';
-  grid.style.display = filtered.length === 0 ? 'none' : '';
-
-  if (displayCount < filtered.length) {
-    loadRow.style.display = '';
-    btn.textContent = `Load More (${(filtered.length - displayCount).toLocaleString()} remaining)`;
-  } else {
-    loadRow.style.display = 'none';
-  }
-
-  document.getElementById('results-count').innerHTML =
-    `Showing <strong>${displayCount.toLocaleString()}</strong> of <strong>${filtered.length.toLocaleString()}</strong> sounds`;
-}
-
-// ─── STOCK EVENT LISTENERS ───────────────────────────────────────────────────
-
-document.getElementById('grid').addEventListener('click', e => {
-  const btn = e.target.closest('.btn-play');
-  if (btn) {
-    const card = btn.closest('.card');
-    togglePlay(card.dataset.url, card);
-  }
-});
-
-document.getElementById('search').addEventListener('input', () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(render, 300);
-});
-
-document.getElementById('btn-load-more').addEventListener('click', showMore);
-
-// ─── CATEGORY FILTERS ───────────────────────────────────────────────────────
-
-function buildFilters() {
-  const wrap = document.getElementById('cat-filters');
-  wrap.innerHTML = '';
-
-  const allBtn = document.createElement('button');
-  allBtn.className = 'cat-pill active';
-  allBtn.textContent = 'All';
-  allBtn.addEventListener('click', () => selectCat('All', allBtn));
-  wrap.appendChild(allBtn);
-
-  for (const cat of topCategories) {
-    const btn = document.createElement('button');
-    btn.className = 'cat-pill';
-    const color = catColors[cat];
-    btn.innerHTML = `<span class="pill-dot" style="background:${color}"></span>${cat}`;
-    btn.addEventListener('click', () => selectCat(cat, btn));
-    wrap.appendChild(btn);
+function buildFilters(){
+  const wrap=document.getElementById('cat-filters');wrap.innerHTML='';
+  const allBtn=document.getElementById('btn-cat-all');
+  allBtn.onclick=()=>{activeCategory='All';clearActive();allBtn.classList.remove('inactive');render();};
+  for(const top of topCategories){
+    const color=catColors[top],subs=subCatMap[top]||[];
+    const count=allSounds.filter(s=>s.topCat===top).length;
+    const group=document.createElement('div');group.className='cat-group';
+    const header=document.createElement('div');header.className='cat-group-title';
+    header.innerHTML='<span class="arrow">▶</span><span class="grp-dot" style="background:'+color+'"></span>'+top+'<span class="grp-count">'+count.toLocaleString()+'</span>';
+    header.addEventListener('click',()=>{
+      if(subs.length>0)group.classList.toggle('open');
+      activeCategory=top;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');header.classList.add('active');render();
+    });
+    group.appendChild(header);
+    if(subs.length>0){
+      const pw=document.createElement('div');pw.className='cat-sub-pills';
+      const allS=document.createElement('button');allS.className='cat-pill active';allS.textContent='All '+top;
+      allS.addEventListener('click',e=>{e.stopPropagation();activeCategory=top;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');allS.classList.add('active');header.classList.add('active');render();});
+      pw.appendChild(allS);
+      for(const sub of subs){
+        const fullCat=top+' / '+sub;
+        const pill=document.createElement('button');pill.className='cat-pill';pill.textContent=sub;
+        pill.addEventListener('click',e=>{e.stopPropagation();activeCategory=fullCat;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');pill.classList.add('active');header.classList.add('active');render();});
+        pw.appendChild(pill);
+      }
+      group.appendChild(pw);
+    }
+    wrap.appendChild(group);
   }
 }
+function clearActive(){document.querySelectorAll('.cat-pill,.cat-group-title').forEach(el=>el.classList.remove('active'));}
 
-function selectCat(cat, btn) {
-  activeCategory = cat;
-  document.querySelectorAll('#cat-filters .cat-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-// ─── NATIVE SOUNDS ───────────────────────────────────────────────────────────
-
-const NATIVE_COLORS = {
-  'Notification':'#ffd740', 'Shop':'#ff8c42', 'Chest':'#ea80fc',
-  'UI':'#82b1ff', 'Collect':'#69f0ae', 'Door':'#bcaaa4',
-  'Level':'#ff5252', 'Voice':'#80deea', 'Effect':'#e040fb',
-};
-
-function renderNative(query) {
-  const grid = document.getElementById('native-grid');
-  const noRes = document.getElementById('native-no-results');
-  const q = (query || '').toLowerCase().trim();
-
-  const list = NATIVE_SOUNDS.filter(s => {
-    if (!q) return true;
-    return s.name.toLowerCase().includes(q) || s.file.toLowerCase().includes(q) || s.cat.toLowerCase().includes(q);
-  });
-
-  grid.innerHTML = '';
-  noRes.style.display = list.length === 0 ? 'block' : 'none';
-  grid.style.display = list.length === 0 ? 'none' : '';
-
-  const frag = document.createDocumentFragment();
-  for (const s of list) {
-    const color = NATIVE_COLORS[s.cat] || '#aaa';
-    frag.appendChild(makeCard(s, color, true));
-  }
+const NATIVE_COLORS={'Notification':'#ffd740','Shop':'#ff8c42','Chest':'#ea80fc','UI':'#82b1ff','Collect':'#69f0ae','Door':'#bcaaa4','Level':'#ff5252','Voice':'#80deea','Effect':'#e040fb'};
+function renderNative(query){
+  const grid=document.getElementById('native-grid'),noRes=document.getElementById('native-no-results'),q=(query||'').toLowerCase().trim();
+  const list=NATIVE_SOUNDS.filter(s=>!q||s.name.toLowerCase().includes(q)||s.file.toLowerCase().includes(q)||s.cat.toLowerCase().includes(q));
+  grid.innerHTML='';noRes.style.display=list.length===0?'block':'none';grid.style.display=list.length===0?'none':'';
+  const frag=document.createDocumentFragment();
+  for(const s of list)frag.appendChild(makeCard(s,NATIVE_COLORS[s.cat]||'#aaa',true));
   grid.appendChild(frag);
 }
-
-document.getElementById('native-grid').addEventListener('click', e => {
-  const btn = e.target.closest('.btn-play');
-  if (btn) {
-    const card = btn.closest('.card');
-    togglePlay(card.dataset.url, card);
-  }
-});
-
-document.getElementById('native-search').addEventListener('input', e => {
-  renderNative(e.target.value);
-});
-
-// ─── TABS ────────────────────────────────────────────────────────────────────
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    stopCurrent();
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
-});
-
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-
-function showToast(text) {
-  const toast = document.getElementById('toast');
-  toast.textContent = text;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
-// ─── INIT ────────────────────────────────────────────────────────────────────
-
-renderNative();
-loadLibrary();
+document.getElementById('native-grid').addEventListener('click',e=>{const b=e.target.closest('.btn-play');if(b)togglePlay(b.closest('.card').dataset.url,b.closest('.card'));});
+document.getElementById('native-search').addEventListener('input',e=>renderNative(e.target.value));
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.addEventListener('click',()=>{stopCurrent();document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active');});});
+function showToast(text){const t=document.getElementById('toast');t.textContent=text;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
+renderNative();loadLibrary();
 </script>
 </body>
 </html>
