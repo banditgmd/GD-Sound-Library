@@ -104,6 +104,32 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 .header-credits-link:hover { color: rgba(255,255,255,0.75); }
 
+/* ---- loading ---- */
+
+#loading-screen {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 40px; height: 40px;
+  border: 4px solid rgba(255,255,255,0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#loading-msg {
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
+  text-shadow: 1px 1px 0 #000;
+}
+
 /* ---- layout ---- */
 
 .main-panel { max-width: 1260px; margin: 0 auto 40px; padding: 0 16px; }
@@ -147,6 +173,45 @@ header { text-align: center; padding: 40px 20px 20px; }
     1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000,
     0 0 12px rgba(255,200,0,0.5);
 }
+
+/* ---- tab switcher ---- */
+
+.tab-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  font-family: 'Pusab', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 11px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 3px solid #1E2A4A;
+  background: linear-gradient(to bottom, #4A5B8A, #323E6A);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), 0 4px 0 #121A30;
+  color: #d0d8ff;
+  text-shadow: 1px 1px 0 #000;
+  transition: filter 0.1s, transform 0.08s;
+  user-select: none;
+}
+
+.tab-btn:hover { filter: brightness(1.15); }
+.tab-btn:active { transform: translateY(2px); }
+
+.tab-btn.active {
+  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
+  border-color: var(--green-border);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 4px 0 var(--green-shadow);
+  color: #1A3A08;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 /* ---- buttons ---- */
 
@@ -225,7 +290,7 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 .search-wrap { position: relative; margin-bottom: 14px; }
 
-#search {
+#search, #native-search {
   width: 100%;
   background: rgba(0,0,0,0.35);
   border: 2px solid rgba(255,255,255,0.15);
@@ -240,9 +305,9 @@ header { text-align: center; padding: 40px 20px 20px; }
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-#search::placeholder { color: rgba(255,255,255,0.35); }
+#search::placeholder, #native-search::placeholder { color: rgba(255,255,255,0.35); }
 
-#search:focus {
+#search:focus, #native-search:focus {
   border-color: rgba(255,200,0,0.6);
   box-shadow: inset 0 2px 6px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,200,0,0.2);
 }
@@ -263,7 +328,7 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 /* ---- grid ---- */
 
-#grid {
+.sfx-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 12px;
@@ -285,7 +350,6 @@ header { text-align: center; padding: 40px 20px 20px; }
   overflow: hidden;
 }
 
-/* category accent stripe */
 .card::before {
   content: '';
   position: absolute;
@@ -309,7 +373,6 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 .card-top { display: flex; align-items: flex-start; gap: 10px; }
 
-/* colored dot replacing emoji icon */
 .cat-dot {
   width: 10px;
   height: 10px;
@@ -341,26 +404,24 @@ header { text-align: center; padding: 40px 20px 20px; }
   text-overflow: ellipsis;
 }
 
-.card-actions { display: flex; gap: 7px; }
+.card-actions { display: flex; gap: 7px; align-items: center; }
+
+/* ---- GD sprite buttons ---- */
 
 .btn-play {
   flex: 1;
-  font-family: 'Pusab', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1px;
-  padding: 7px 8px;
+  padding: 4px 8px;
   border-radius: 6px;
   cursor: pointer;
   background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
   border: 2px solid var(--green-border);
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 3px 0 var(--green-shadow);
-  color: #1A3A08;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
   transition: filter 0.1s, transform 0.08s;
+  height: 36px;
 }
 
 .btn-play:hover { filter: brightness(1.1); }
@@ -370,32 +431,40 @@ header { text-align: center; padding: 40px 20px 20px; }
   background: linear-gradient(to bottom, #ff6b6b, #cc3333);
   border-color: #881111;
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.25), 0 3px 0 #550A0A;
-  color: #fff;
-  text-shadow: 1px 1px 0 #000;
+}
+
+.btn-play img {
+  height: 22px;
+  width: auto;
+  image-rendering: auto;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.4));
 }
 
 .btn-dl {
-  font-family: 'Pusab', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1px;
-  padding: 7px 12px;
+  padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
   background: linear-gradient(to bottom, var(--blue-hi), var(--blue-lo));
   border: 2px solid #2A3D7A;
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 3px 0 #1A2D5A;
-  color: #fff;
-  text-shadow: 1px 1px 0 #000;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   transition: filter 0.1s, transform 0.08s;
+  height: 36px;
 }
 
 .btn-dl:hover { filter: brightness(1.15); }
 .btn-dl:active { transform: translateY(1px); }
+
+.btn-dl img {
+  height: 22px;
+  width: auto;
+  image-rendering: auto;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.4));
+}
 
 /* card footer */
 .card-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
@@ -433,10 +502,38 @@ header { text-align: center; padding: 40px 20px 20px; }
   cursor: default;
 }
 
+.card-dur {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.5px;
+}
+
+/* ---- load more ---- */
+
+.load-more-row { text-align: center; margin-top: 20px; }
+
+#btn-load-more {
+  font-family: 'Pusab', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 12px 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
+  border: 3px solid var(--green-border);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 4px 0 var(--green-shadow), 0 5px 10px rgba(0,0,0,0.3);
+  color: #1A3A08;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  transition: filter 0.1s, transform 0.1s;
+}
+
+#btn-load-more:hover { filter: brightness(1.1); }
+#btn-load-more:active { transform: translateY(2px); }
+
 /* ---- no results ---- */
 
-#no-results { display: none; text-align: center; padding: 60px 20px; }
-#no-results p {
+.no-results { display: none; text-align: center; padding: 60px 20px; }
+.no-results p {
   font-size: 16px;
   letter-spacing: 1px;
   color: rgba(255,255,255,0.5);
@@ -447,9 +544,9 @@ header { text-align: center; padding: 40px 20px 20px; }
 
 .dl-all-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
 
-#zip-area { text-align: center; margin-top: 10px; display: none; }
+.zip-area { text-align: center; margin-top: 10px; display: none; }
 
-#zip-msg {
+.zip-msg {
   font-size: 12px;
   letter-spacing: 1px;
   color: var(--green-hi);
@@ -467,13 +564,22 @@ header { text-align: center; padding: 40px 20px 20px; }
   margin: 0 auto;
 }
 
-#zip-bar {
+.zip-bar {
   height: 100%;
   width: 0;
   background: linear-gradient(90deg, var(--green-hi), var(--green-lo));
   border-radius: 100px;
   transition: width 0.1s;
   box-shadow: 0 0 8px rgba(122,222,45,0.5);
+}
+
+/* ---- native panel accent ---- */
+
+.native-accent { border-color: #6A3DAA; }
+.native-accent .panel-inner { border-color: rgba(106,61,170,0.4); }
+.native-accent .panel-title {
+  background: linear-gradient(to bottom, #6A3DAA, #4A2080);
+  border-color: #2E1050;
 }
 
 /* ---- footer ---- */
@@ -520,8 +626,9 @@ footer { text-align: center; padding: 28px 20px 40px; }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 580px) {
-  #grid { grid-template-columns: 1fr; }
+  .sfx-grid { grid-template-columns: 1fr; }
   .header-title { font-size: 32px; }
+  .tab-btn { font-size: 12px; padding: 9px 16px; }
 }
 </style>
 </head>
@@ -529,52 +636,87 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
 <header>
   <div class="header-title shadow-lg">GD Sound Library</div>
-  <div class="header-subtitle">250+ stock sounds ripped directly from Geometry Dash!</div>
-  <div class="header-stats">
-    <div class="stat-badge shadow-sm"><strong>260</strong> Sounds</div>
-    <div class="stat-badge shadow-sm"><strong>16</strong> Categories</div>
+  <div class="header-subtitle" id="header-sub">Loading the full Geometry Dash sound library...</div>
+  <div class="header-stats" id="header-stats">
+    <div class="stat-badge shadow-sm"><strong id="stat-stock">...</strong> Stock SFX</div>
+    <div class="stat-badge shadow-sm"><strong id="stat-native">27</strong> Native Sounds</div>
+    <div class="stat-badge shadow-sm"><strong id="stat-cats">...</strong> Categories</div>
   </div>
   <a class="header-credits-link" href="#credits">Credits</a>
 </header>
 
 <div class="main-panel">
 
-  <div class="dl-all-row">
-    <button class="gd-btn btn-green" id="btn-zip">Download All (260 Sounds)</button>
-  </div>
-  <div id="zip-area">
-    <div id="zip-msg">Packing...</div>
-    <div class="zip-bar-wrap"><div id="zip-bar"></div></div>
+  <!-- Tab Switcher -->
+  <div class="tab-row">
+    <button class="tab-btn active" data-tab="stock">Stock SFX Library</button>
+    <button class="tab-btn" data-tab="native">Native Game Sounds</button>
   </div>
 
-  <div class="panel-box">
-    <div class="panel-inner">
-      <div class="panel-title"><span>Search Sounds</span></div>
-      <div class="search-wrap">
-        <input id="search" type="text" placeholder="Search by name or category..." autocomplete="off" spellcheck="false"/>
+  <!-- ======================== STOCK SFX TAB ======================== -->
+  <div class="tab-content active" id="tab-stock">
+
+    <div id="loading-screen">
+      <div class="loading-spinner"></div>
+      <div id="loading-msg">Fetching SFX library from GD servers...</div>
+    </div>
+
+    <div id="stock-ui" style="display:none;">
+
+      <div class="panel-box">
+        <div class="panel-inner">
+          <div class="panel-title"><span>Search Sounds</span></div>
+          <div class="search-wrap">
+            <input id="search" type="text" placeholder="Search by name, category, or ID..." autocomplete="off" spellcheck="false"/>
+          </div>
+          <div class="cat-filters" id="cat-filters"></div>
+        </div>
       </div>
-      <div class="cat-filters" id="cat-filters"></div>
+
+      <div class="results-bar">
+        <div class="results-count" id="results-count"></div>
+      </div>
+
+      <div class="sfx-grid" id="grid"></div>
+      <div class="no-results" id="no-results"><p>No sounds found.</p></div>
+
+      <div class="load-more-row" id="load-more-row" style="display:none;">
+        <button id="btn-load-more">Load More</button>
+      </div>
     </div>
   </div>
 
-  <div class="results-bar">
-    <div class="results-count" id="results-count"></div>
-  </div>
+  <!-- ======================== NATIVE SOUNDS TAB ======================== -->
+  <div class="tab-content" id="tab-native">
 
-  <div id="grid"></div>
-  <div id="no-results">
-    <p>No sounds found.</p>
+    <div class="panel-box native-accent">
+      <div class="panel-inner">
+        <div class="panel-title"><span>Native Game Sounds</span></div>
+        <p style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:14px;letter-spacing:0.8px;">
+          Built-in sounds that ship with Geometry Dash — death, menus, achievements, vaults, and more.
+        </p>
+        <div class="search-wrap">
+          <input id="native-search" type="text" placeholder="Search native sounds..." autocomplete="off" spellcheck="false"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="sfx-grid" id="native-grid"></div>
+    <div class="no-results" id="native-no-results"><p>No native sounds found.</p></div>
   </div>
 
 </div>
 
 <footer id="credits">
   <div class="footer-panel">
-    <div class="footer-credits">
-      Sound assets from
-      <a href="https://www.sounds-resource.com" target="_blank" rel="noopener">The Sounds Resource</a>
+    <div class="footer-credits" id="footer-credits">
+      Sound assets &amp; SFX library by
+      <a href="https://robtopgames.com" target="_blank" rel="noopener">RobTop Games</a>
       &nbsp;·&nbsp;
-      SFX library archive by
+      SFX library docs by
+      <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a>
+      &nbsp;·&nbsp;
+      Archive by
       <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>
       &nbsp;·&nbsp;
       Theme courtesy of
@@ -586,45 +728,202 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
 <div id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- pako for zlib decompression -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script>
-const SFX_PATH = 'sounds/';
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+const CDN_SFX_LIB  = 'https://geometrydashfiles.b-cdn.net/sfx/sfxlibrary.dat';
+const STOCK_PATH    = 'sfx/stock/';
+const NATIVE_PATH   = 'sfx/native/';
+const ASSET_PATH    = 'assets/';
+const PAGE_SIZE     = 120;
 
-const RAW_SOUNDS = [{"id":"3556","name":"Dive in Water 01","category":"Aquatic Sounds","file":"Dive in Water 01.ogg","orig":"s3556.ogg"},{"id":"4272","name":"Boulder Movement 02","category":"Construction and Demolition","file":"Boulder Movement 02.ogg","orig":"s4272.ogg"},{"id":"4273","name":"Castle Crumble 01","category":"Construction and Demolition","file":"Castle Crumble 01.ogg","orig":"s4273.ogg"},{"id":"4274","name":"Castle Crumble 02","category":"Construction and Demolition","file":"Castle Crumble 02.ogg","orig":"s4274.ogg"},{"id":"2075","name":"Ceramic Break Large 03","category":"Construction and Demolition","file":"Ceramic Break Large 03.ogg","orig":"s2075.ogg"},{"id":"2079","name":"Ceramic Break Small 03","category":"Construction and Demolition","file":"Ceramic Break Small 03.ogg","orig":"s2079.ogg"},{"id":"2031","name":"Glass Break Large 01","category":"Construction and Demolition","file":"Glass Break Large 01.ogg","orig":"s2031.ogg"},{"id":"2981","name":"Heavy Metal on Wood Clank 01","category":"Construction and Demolition","file":"Heavy Metal on Wood Clank 01.ogg","orig":"s2981.ogg"},{"id":"4278","name":"Stone Building Destroy 01","category":"Construction and Demolition","file":"Stone Building Destroy 01.ogg","orig":"s4278.ogg"},{"id":"4261","name":"Stone Building Destroy 05","category":"Construction and Demolition","file":"Stone Building Destroy 05.ogg","orig":"s4261.ogg"},{"id":"2974","name":"Structure Destruction 04","category":"Construction and Demolition","file":"Structure Destruction 04.ogg","orig":"s2974.ogg"},{"id":"2975","name":"Wooden Barrel On Ground 01","category":"Construction and Demolition","file":"Wooden Barrel On Ground 01.ogg","orig":"s2975.ogg"},{"id":"3016","name":"Bat Fly Squeak 01","category":"Creatures / Animals","file":"Bat Fly Squeak 01.ogg","orig":"s3016.ogg"},{"id":"3533","name":"Chicken Cluck 01","category":"Creatures / Animals","file":"Chicken Cluck 01.ogg","orig":"s3533.ogg"},{"id":"7220","name":"Growl 12","category":"Creatures / Big Monster","file":"Growl 12.ogg","orig":"s7220.ogg"},{"id":"7243","name":"Roar 03","category":"Creatures / Big Monster","file":"Roar 03.ogg","orig":"s7243.ogg"},{"id":"7245","name":"Roar 05","category":"Creatures / Big Monster","file":"Roar 05.ogg","orig":"s7245.ogg"},{"id":"7250","name":"Roar 10","category":"Creatures / Big Monster","file":"Roar 10.ogg","orig":"s7250.ogg"},{"id":"766","name":"Stone Move 01","category":"Creatures / Earth Elemental","file":"Stone Move 01.ogg","orig":"s766.ogg"},{"id":"767","name":"Stone Move 02","category":"Creatures / Earth Elemental","file":"Stone Move 02.ogg","orig":"s767.ogg"},{"id":"740","name":"Stone Move Thump 04","category":"Creatures / Earth Elemental","file":"Stone Move Thump 04.ogg","orig":"s740.ogg"},{"id":"788","name":"Attack Roar 01","category":"Creatures / Fire Elemental","file":"Attack Roar 01.ogg","orig":"s788.ogg"},{"id":"783","name":"Winning Roar 02","category":"Creatures / Fire Elemental","file":"Winning Roar 02.ogg","orig":"s783.ogg"},{"id":"4811","name":"Grunt 03","category":"Creatures / Giant Ogre","file":"Grunt 03.ogg","orig":"s4811.ogg"},{"id":"6892","name":"Angry 01","category":"Creatures / Goblin","file":"Angry 01.ogg","orig":"s6892.ogg"},{"id":"6897","name":"Cheer 01","category":"Creatures / Goblin","file":"Cheer 01.ogg","orig":"s6897.ogg"},{"id":"6883","name":"Scream 02","category":"Creatures / Goblin","file":"Scream 02.ogg","orig":"s6883.ogg"},{"id":"7376","name":"Fast Gibberish 01","category":"Creatures / Small Monster","file":"Fast Gibberish 01.ogg","orig":"s7376.ogg"},{"id":"7383","name":"Hiss 06","category":"Creatures / Small Monster","file":"Hiss 06.ogg","orig":"s7383.ogg"},{"id":"7387","name":"Hiss 10","category":"Creatures / Small Monster","file":"Hiss 10.ogg","orig":"s7387.ogg"},{"id":"7391","name":"Voice Effect 02","category":"Creatures / Small Monster","file":"Voice Effect 02.ogg","orig":"s7391.ogg"},{"id":"7295","name":"Voice Effect 16","category":"Creatures / Small Monster","file":"Voice Effect 16.ogg","orig":"s7295.ogg"},{"id":"7309","name":"Voice Effect 30","category":"Creatures / Small Monster","file":"Voice Effect 30.ogg","orig":"s7309.ogg"},{"id":"7310","name":"Voice Effect 31","category":"Creatures / Small Monster","file":"Voice Effect 31.ogg","orig":"s7310.ogg"},{"id":"7326","name":"Voice Effect 47","category":"Creatures / Small Monster","file":"Voice Effect 47.ogg","orig":"s7326.ogg"},{"id":"7342","name":"Voice Effect 63","category":"Creatures / Small Monster","file":"Voice Effect 63.ogg","orig":"s7342.ogg"},{"id":"7359","name":"Voice Effect 80","category":"Creatures / Small Monster","file":"Voice Effect 80.ogg","orig":"s7359.ogg"},{"id":"7360","name":"Voice Effect 81","category":"Creatures / Small Monster","file":"Voice Effect 81.ogg","orig":"s7360.ogg"},{"id":"7361","name":"Voice Effect 82","category":"Creatures / Small Monster","file":"Voice Effect 82.ogg","orig":"s7361.ogg"},{"id":"10412","name":"Demonic Laughter 07","category":"Creatures / Various","file":"Demonic Laughter 07.ogg","orig":"s10412.ogg"},{"id":"20982","name":"Ambiguous","category":"Events and Fanfares","file":"Ambiguous.ogg","orig":"s20982.ogg"},{"id":"9483","name":"Dark Strings Swell","category":"Events and Fanfares","file":"Dark Strings Swell.ogg","orig":"s9483.ogg"},{"id":"20986","name":"EN GARDE","category":"Events and Fanfares","file":"EN GARDE.ogg","orig":"s20986.ogg"},{"id":"9484","name":"Epic Drum 01","category":"Events and Fanfares","file":"Epic Drum 01.ogg","orig":"s9484.ogg"},{"id":"9485","name":"Epic Drum 02","category":"Events and Fanfares","file":"Epic Drum 02.ogg","orig":"s9485.ogg"},{"id":"9489","name":"Epic Drum 06","category":"Events and Fanfares","file":"Epic Drum 06.ogg","orig":"s9489.ogg"},{"id":"9465","name":"Epic Drum 09","category":"Events and Fanfares","file":"Epic Drum 09.ogg","orig":"s9465.ogg"},{"id":"9470","name":"Epic Drum 14","category":"Events and Fanfares","file":"Epic Drum 14.ogg","orig":"s9470.ogg"},{"id":"3448","name":"Epic Event 03","category":"Events and Fanfares","file":"Epic Event 03.ogg","orig":"s3448.ogg"},{"id":"13143","name":"Lose Sting 02","category":"Events and Fanfares","file":"Lose Sting 02.ogg","orig":"s13143.ogg"},{"id":"1739","name":"Electric Explosion 01","category":"Explosions and Destruction","file":"Electric Explosion 01.ogg","orig":"s1739.ogg"},{"id":"1740","name":"Explosion 01","category":"Explosions and Destruction","file":"Explosion 01.ogg","orig":"s1740.ogg"},{"id":"2714","name":"Glass Potion Shatter 01","category":"Explosions and Destruction","file":"Glass Potion Shatter 01.ogg","orig":"s2714.ogg"},{"id":"2707","name":"Glass Potion Shatter 06","category":"Explosions and Destruction","file":"Glass Potion Shatter 06.ogg","orig":"s2707.ogg"},{"id":"2708","name":"Glass Potion Shatter 07","category":"Explosions and Destruction","file":"Glass Potion Shatter 07.ogg","orig":"s2708.ogg"},{"id":"1548","name":"Distant Fire Detonation","category":"Fire and Flames","file":"Distant Fire Detonation.ogg","orig":"s1548.ogg"},{"id":"3125","name":"Fire Beam Loop 01","category":"Fire and Flames","file":"Fire Beam Loop 01.ogg","orig":"s3125.ogg"},{"id":"1552","name":"Fire Burst 02","category":"Fire and Flames","file":"Fire Burst 02.ogg","orig":"s1552.ogg"},{"id":"1553","name":"Fire Explosion 01","category":"Fire and Flames","file":"Fire Explosion 01.ogg","orig":"s1553.ogg"},{"id":"1554","name":"Fire Explosion 02","category":"Fire and Flames","file":"Fire Explosion 02.ogg","orig":"s1554.ogg"},{"id":"1558","name":"Fire Torch 01","category":"Fire and Flames","file":"Fire Torch 01.ogg","orig":"s1558.ogg"},{"id":"2849","name":"Fire Torch Light 01","category":"Fire and Flames","file":"Fire Torch Light 01.ogg","orig":"s2849.ogg"},{"id":"1564","name":"Fire Torch Loop","category":"Fire and Flames","file":"Fire Torch Loop.ogg","orig":"s1564.ogg"},{"id":"1573","name":"Fire Whoosh 07","category":"Fire and Flames","file":"Fire Whoosh 07.ogg","orig":"s1573.ogg"},{"id":"3121","name":"Fire Whoosh 09","category":"Fire and Flames","file":"Fire Whoosh 09.ogg","orig":"s3121.ogg"},{"id":"3122","name":"Fire Whoosh 10","category":"Fire and Flames","file":"Fire Whoosh 10.ogg","orig":"s3122.ogg"},{"id":"1601","name":"Fireball Throw 01","category":"Fire and Flames","file":"Fireball Throw 01.ogg","orig":"s1601.ogg"},{"id":"1611","name":"Fireball Whoosh 07","category":"Fire and Flames","file":"Fireball Whoosh 07.ogg","orig":"s1611.ogg"},{"id":"2847","name":"Fuse Burn Loop 01","category":"Fire and Flames","file":"Fuse Burn Loop 01.ogg","orig":"s2847.ogg"},{"id":"1618","name":"Lava Boiling Loop 01","category":"Fire and Flames","file":"Lava Boiling Loop 01.ogg","orig":"s1618.ogg"},{"id":"1619","name":"Lava Boiling Loop 02","category":"Fire and Flames","file":"Lava Boiling Loop 02.ogg","orig":"s1619.ogg"},{"id":"2265","name":"Run Dirt 02","category":"Footsteps","file":"Run Dirt 02.ogg","orig":"s2265.ogg"},{"id":"2267","name":"Run Dirt 04","category":"Footsteps","file":"Run Dirt 04.ogg","orig":"s2267.ogg"},{"id":"2268","name":"Run Dirt 05","category":"Footsteps","file":"Run Dirt 05.ogg","orig":"s2268.ogg"},{"id":"2269","name":"Run Dirt 06","category":"Footsteps","file":"Run Dirt 06.ogg","orig":"s2269.ogg"},{"id":"2270","name":"Run Grass 01","category":"Footsteps","file":"Run Grass 01.ogg","orig":"s2270.ogg"},{"id":"2271","name":"Run Grass 02","category":"Footsteps","file":"Run Grass 02.ogg","orig":"s2271.ogg"},{"id":"2282","name":"Run Stone 01","category":"Footsteps","file":"Run Stone 01.ogg","orig":"s2282.ogg"},{"id":"2283","name":"Run Stone 02","category":"Footsteps","file":"Run Stone 02.ogg","orig":"s2283.ogg"},{"id":"2284","name":"Run Stone 03","category":"Footsteps","file":"Run Stone 03.ogg","orig":"s2284.ogg"},{"id":"2286","name":"Run Stone 05","category":"Footsteps","file":"Run Stone 05.ogg","orig":"s2286.ogg"},{"id":"2235","name":"Walk Dirt 02","category":"Footsteps","file":"Walk Dirt 02.ogg","orig":"s2235.ogg"},{"id":"2237","name":"Walk Dirt 04","category":"Footsteps","file":"Walk Dirt 04.ogg","orig":"s2237.ogg"},{"id":"2238","name":"Walk Dirt 05","category":"Footsteps","file":"Walk Dirt 05.ogg","orig":"s2238.ogg"},{"id":"537","name":"Explosion Impact 01 Stone","category":"Impacts and Hits","file":"Explosion Impact 01 Stone.ogg","orig":"s537.ogg"},{"id":"4292","name":"Rock Impact 01","category":"Impacts and Hits","file":"Rock Impact 01.ogg","orig":"s4292.ogg"},{"id":"4293","name":"Rock Impact 01B","category":"Impacts and Hits","file":"Rock Impact 01B.ogg","orig":"s4293.ogg"},{"id":"4295","name":"Rock Impact 02B","category":"Impacts and Hits","file":"Rock Impact 02B.ogg","orig":"s4295.ogg"},{"id":"4290","name":"Rubble Burst 02","category":"Impacts and Hits","file":"Rubble Burst 02.ogg","orig":"s4290.ogg"},{"id":"458","name":"Wood Hit 01","category":"Impacts and Hits","file":"Wood Hit 01.ogg","orig":"s458.ogg"},{"id":"459","name":"Wood Hit 02","category":"Impacts and Hits","file":"Wood Hit 02.ogg","orig":"s459.ogg"},{"id":"462","name":"Wood Thud 02","category":"Impacts and Hits","file":"Wood Thud 02.ogg","orig":"s462.ogg"},{"id":"463","name":"Wood Thud 03","category":"Impacts and Hits","file":"Wood Thud 03.ogg","orig":"s463.ogg"},{"id":"470","name":"Achievement Reveal 03","category":"Interface / Alerts and Notifications","file":"Achievement Reveal 03.ogg","orig":"s470.ogg"},{"id":"500","name":"Bright Notification 02","category":"Interface / Alerts and Notifications","file":"Bright Notification 02.ogg","orig":"s500.ogg"},{"id":"536","name":"Ethnic Notification 02","category":"Interface / Alerts and Notifications","file":"Ethnic Notification 02.ogg","orig":"s536.ogg"},{"id":"566","name":"Magic Click Notification","category":"Interface / Alerts and Notifications","file":"Magic Click Notification.ogg","orig":"s566.ogg"},{"id":"567","name":"Marimba 01","category":"Interface / Alerts and Notifications","file":"Marimba 01.ogg","orig":"s567.ogg"},{"id":"2297","name":"Warning 04","category":"Interface / Alerts and Notifications","file":"Warning 04.ogg","orig":"s2297.ogg"},{"id":"14046","name":"Alarm Submarine Fast","category":"Interface / Alerts and Notifications / Alarms","file":"Alarm Submarine Fast.ogg","orig":"s14046.ogg"},{"id":"14061","name":"Buzz Error 05","category":"Interface / Alerts and Notifications / Errors","file":"Buzz Error 05.ogg","orig":"s14061.ogg"},{"id":"2853","name":"Bell Ring 01","category":"Interface / Bells and Chimes","file":"Bell Ring 01.ogg","orig":"s2853.ogg"},{"id":"474","name":"Analog Button Click 02","category":"Interface / Buttons and Clicks","file":"Analog Button Click 02.ogg","orig":"s474.ogg"},{"id":"2306","name":"Construction UI Button 01","category":"Interface / Buttons and Clicks","file":"Construction UI Button 01.ogg","orig":"s2306.ogg"},{"id":"599","name":"Plastic Click 01","category":"Interface / Buttons and Clicks","file":"Plastic Click 01.ogg","orig":"s599.ogg"},{"id":"8191","name":"Swoosh Sound 04","category":"Interface / Swipes and Wind","file":"Swoosh Sound 04.ogg","orig":"s8191.ogg"},{"id":"13231","name":"UI Select 01","category":"Interface / UI Actions","file":"UI Select 01.ogg","orig":"s13231.ogg"},{"id":"4829","name":"Bot Mechanics Movement 01","category":"Machines and Robotics","file":"Bot Mechanics Movement 01.ogg","orig":"s4829.ogg"},{"id":"4831","name":"Bot Mechanics Movement 03","category":"Machines and Robotics","file":"Bot Mechanics Movement 03.ogg","orig":"s4831.ogg"},{"id":"4846","name":"Cyberbetic Tech Gear Movement 01","category":"Machines and Robotics","file":"Cyberbetic Tech Gear Movement 01.ogg","orig":"s4846.ogg"},{"id":"4848","name":"Cybernetic Activation 01","category":"Machines and Robotics","file":"Cybernetic Activation 01.ogg","orig":"s4848.ogg"},{"id":"4849","name":"Cybernetic Activation 02","category":"Machines and Robotics","file":"Cybernetic Activation 02.ogg","orig":"s4849.ogg"},{"id":"4857","name":"Dark Material Slide 01","category":"Machines and Robotics","file":"Dark Material Slide 01.ogg","orig":"s4857.ogg"},{"id":"4881","name":"Electricity Power Surge 01","category":"Machines and Robotics","file":"Electricity Power Surge 01.ogg","orig":"s4881.ogg"},{"id":"4882","name":"Electricity Power Surge 02","category":"Machines and Robotics","file":"Electricity Power Surge 02.ogg","orig":"s4882.ogg"},{"id":"4888","name":"Energy Bling","category":"Machines and Robotics","file":"Energy Bling.ogg","orig":"s4888.ogg"},{"id":"4921","name":"Light Metal Servo Parts Movement 01","category":"Machines and Robotics","file":"Light Metal Servo Parts Movement 01.ogg","orig":"s4921.ogg"},{"id":"3335","name":"Robot Transformation A 05","category":"Machines and Robotics / Robots","file":"Robot Transformation A 05.ogg","orig":"s3335.ogg"},{"id":"9623","name":"Battle End Drum 03","category":"Melodic Stingers","file":"Battle End Drum 03.ogg","orig":"s9623.ogg"},{"id":"4158","name":"Chipbell Item 01","category":"Melodic Stingers","file":"Chipbell Item 01.ogg","orig":"s4158.ogg"},{"id":"9702","name":"Victory Stinger 01","category":"Melodic Stingers","file":"Victory Stinger 01.ogg","orig":"s9702.ogg"},{"id":"520","name":"Coin Pop 01","category":"Objects / Coins and Money","file":"Coin Pop 01.ogg","orig":"s520.ogg"},{"id":"4404","name":"Purchase Item 05","category":"Objects / Coins and Money","file":"Purchase Item 05.ogg","orig":"s4404.ogg"},{"id":"14011","name":"Stone Pick Up 06","category":"Objects / Crafting","file":"Stone Pick Up 06.ogg","orig":"s14011.ogg"},{"id":"14013","name":"Stone Touch 02","category":"Objects / Crafting","file":"Stone Touch 02.ogg","orig":"s14013.ogg"},{"id":"1064","name":"Barn Door Open","category":"Objects / Doors and Chests","file":"Barn Door Open.ogg","orig":"s1064.ogg"},{"id":"1065","name":"Castle Door Close","category":"Objects / Doors and Chests","file":"Castle Door Close.ogg","orig":"s1065.ogg"},{"id":"1372","name":"Chest Open Creak 01E","category":"Objects / Doors and Chests","file":"Chest Open Creak 01E.ogg","orig":"s1372.ogg"},{"id":"1374","name":"Chest Open Creak 02B","category":"Objects / Doors and Chests","file":"Chest Open Creak 02B.ogg","orig":"s1374.ogg"},{"id":"1375","name":"Chest Open Creak 02C","category":"Objects / Doors and Chests","file":"Chest Open Creak 02C.ogg","orig":"s1375.ogg"},{"id":"1377","name":"Chest Open Creak 02E","category":"Objects / Doors and Chests","file":"Chest Open Creak 02E.ogg","orig":"s1377.ogg"},{"id":"12863","name":"Closing Chest Large 02","category":"Objects / Doors and Chests","file":"Closing Chest Large 02.ogg","orig":"s12863.ogg"},{"id":"1200","name":"Door 03 Close","category":"Objects / Doors and Chests","file":"Door 03 Close.ogg","orig":"s1200.ogg"},{"id":"1202","name":"Door 03 Open","category":"Objects / Doors and Chests","file":"Door 03 Open.ogg","orig":"s1202.ogg"},{"id":"2195","name":"Door Open 09","category":"Objects / Doors and Chests","file":"Door Open 09.ogg","orig":"s2195.ogg"},{"id":"1313","name":"Metal Gate Close 1A","category":"Objects / Doors and Chests","file":"Metal Gate Close 1A.ogg","orig":"s1313.ogg"},{"id":"1837","name":"Stone Door Close","category":"Objects / Doors and Chests","file":"Stone Door Close.ogg","orig":"s1837.ogg"},{"id":"2454","name":"Stone Door Slide 02","category":"Objects / Doors and Chests","file":"Stone Door Slide 02.ogg","orig":"s2454.ogg"},{"id":"2858","name":"Backpack Item Throw","category":"Objects / Items and Equipment","file":"Backpack Item Throw.ogg","orig":"s2858.ogg"},{"id":"1254","name":"Keys 01","category":"Objects / Locks and Levers","file":"Keys 01.ogg","orig":"s1254.ogg"},{"id":"1274","name":"Lock 15","category":"Objects / Locks and Levers","file":"Lock 15.ogg","orig":"s1274.ogg"},{"id":"1277","name":"Lock 18","category":"Objects / Locks and Levers","file":"Lock 18.ogg","orig":"s1277.ogg"},{"id":"2366","name":"Lock B 03","category":"Objects / Locks and Levers","file":"Lock B 03.ogg","orig":"s2366.ogg"},{"id":"2367","name":"Lock Electronic 01","category":"Objects / Locks and Levers","file":"Lock Electronic 01.ogg","orig":"s2367.ogg"},{"id":"2326","name":"Lock High Tech 03","category":"Objects / Locks and Levers","file":"Lock High Tech 03.ogg","orig":"s2326.ogg"},{"id":"1072","name":"Lock Mechanism 01","category":"Objects / Locks and Levers","file":"Lock Mechanism 01.ogg","orig":"s1072.ogg"},{"id":"1076","name":"Mechanism Spin Loop 01","category":"Objects / Locks and Levers","file":"Mechanism Spin Loop 01.ogg","orig":"s1076.ogg"},{"id":"13700","name":"Fast Rotation 01","category":"Objects / Mechanisms","file":"Fast Rotation 01.ogg","orig":"s13700.ogg"},{"id":"13702","name":"Fast Rotation 03","category":"Objects / Mechanisms","file":"Fast Rotation 03.ogg","orig":"s13702.ogg"},{"id":"13844","name":"Stopwatch Ticking","category":"Objects / Mechanisms","file":"Stopwatch Ticking.ogg","orig":"s13844.ogg"},{"id":"9877","name":"Chain 02","category":"Objects / Metal and Gears","file":"Chain 02.ogg","orig":"s9877.ogg"},{"id":"12918","name":"Chain 04","category":"Objects / Metal and Gears","file":"Chain 04.ogg","orig":"s12918.ogg"},{"id":"12919","name":"Chain 05","category":"Objects / Metal and Gears","file":"Chain 05.ogg","orig":"s12919.ogg"},{"id":"1078","name":"Chain Clanking 01","category":"Objects / Metal and Gears","file":"Chain Clanking 01.ogg","orig":"s1078.ogg"},{"id":"1032","name":"Chain Clanking 02","category":"Objects / Metal and Gears","file":"Chain Clanking 02.ogg","orig":"s1032.ogg"},{"id":"3376","name":"Chain Lift Machine","category":"Objects / Metal and Gears","file":"Chain Lift Machine.ogg","orig":"s3376.ogg"},{"id":"1528","name":"Chains 01","category":"Objects / Metal and Gears","file":"Chains 01.ogg","orig":"s1528.ogg"},{"id":"2508","name":"Metal Debris Twist 01","category":"Objects / Metal and Gears","file":"Metal Debris Twist 01.ogg","orig":"s2508.ogg"},{"id":"2516","name":"Metal Latch Connection","category":"Objects / Metal and Gears","file":"Metal Latch Connection.ogg","orig":"s2516.ogg"},{"id":"12911","name":"Metal Rattle 03","category":"Objects / Metal and Gears","file":"Metal Rattle 03.ogg","orig":"s12911.ogg"},{"id":"12912","name":"Metal Rattle 04","category":"Objects / Metal and Gears","file":"Metal Rattle 04.ogg","orig":"s12912.ogg"},{"id":"12913","name":"Metal Rattle 05","category":"Objects / Metal and Gears","file":"Metal Rattle 05.ogg","orig":"s12913.ogg"},{"id":"2529","name":"Metal Screw Loose 02","category":"Objects / Metal and Gears","file":"Metal Screw Loose 02.ogg","orig":"s2529.ogg"},{"id":"2530","name":"Metal Screw Loose 03","category":"Objects / Metal and Gears","file":"Metal Screw Loose 03.ogg","orig":"s2530.ogg"},{"id":"2552","name":"Metal Tube Slide 01","category":"Objects / Metal and Gears","file":"Metal Tube Slide 01.ogg","orig":"s2552.ogg"},{"id":"9982","name":"Paper Page Turn 01","category":"Objects / Object Interactions","file":"Paper Page Turn 01.ogg","orig":"s9982.ogg"},{"id":"9983","name":"Paper Page Turn 02","category":"Objects / Object Interactions","file":"Paper Page Turn 02.ogg","orig":"s9983.ogg"},{"id":"4055","name":"Box Pickup 01","category":"Objects / Pick Ups","file":"Box Pickup 01.ogg","orig":"s4055.ogg"},{"id":"4400","name":"Coin Game Pick Up 03","category":"Objects / Pick Ups","file":"Coin Game Pick Up 03.ogg","orig":"s4400.ogg"},{"id":"4401","name":"Coin Game Pick Up 04","category":"Objects / Pick Ups","file":"Coin Game Pick Up 04.ogg","orig":"s4401.ogg"},{"id":"4394","name":"Coin Game Pick Up 06","category":"Objects / Pick Ups","file":"Coin Game Pick Up 06.ogg","orig":"s4394.ogg"},{"id":"4397","name":"Coin Game Pick Up 09","category":"Objects / Pick Ups","file":"Coin Game Pick Up 09.ogg","orig":"s4397.ogg"},{"id":"2782","name":"Bubbles Bloop 03","category":"Objects / Potions and Brewing","file":"Bubbles Bloop 03.ogg","orig":"s2782.ogg"},{"id":"5223","name":"Bubbles Bloop 04","category":"Objects / Potions and Brewing","file":"Bubbles Bloop 04.ogg","orig":"s5223.ogg"},{"id":"2785","name":"Drop in Liquid Splash 03","category":"Objects / Potions and Brewing","file":"Drop in Liquid Splash 03.ogg","orig":"s2785.ogg"},{"id":"4348","name":"Arm Trap 01","category":"Objects / Tools and Crafting","file":"Arm Trap 01.ogg","orig":"s4348.ogg"},{"id":"4349","name":"Arm Trap 02","category":"Objects / Tools and Crafting","file":"Arm Trap 02.ogg","orig":"s4349.ogg"},{"id":"2581","name":"Pulley Wheel 01","category":"Objects / Tools and Crafting","file":"Pulley Wheel 01.ogg","orig":"s2581.ogg"},{"id":"2582","name":"Pulley Wheel 02","category":"Objects / Tools and Crafting","file":"Pulley Wheel 02.ogg","orig":"s2582.ogg"},{"id":"2588","name":"Switch Twist Crank 01","category":"Objects / Tools and Crafting","file":"Switch Twist Crank 01.ogg","orig":"s2588.ogg"},{"id":"2441","name":"Water Mechanism Flutter 02","category":"Objects / Tools and Crafting","file":"Water Mechanism Flutter 02.ogg","orig":"s2441.ogg"},{"id":"2590","name":"Wind Up Mechanism 01","category":"Objects / Tools and Crafting","file":"Wind Up Mechanism 01.ogg","orig":"s2590.ogg"},{"id":"2591","name":"Wind Up Mechanism 02","category":"Objects / Tools and Crafting","file":"Wind Up Mechanism 02.ogg","orig":"s2591.ogg"},{"id":"2597","name":"Wood Gear Mechanism 06","category":"Objects / Tools and Crafting","file":"Wood Gear Mechanism 06.ogg","orig":"s2597.ogg"},{"id":"2612","name":"Wood Wheel Turn Loop","category":"Objects / Tools and Crafting","file":"Wood Wheel Turn Loop.ogg","orig":"s2612.ogg"},{"id":"2614","name":"Wooden Mechanism Arm 01","category":"Objects / Tools and Crafting","file":"Wooden Mechanism Arm 01.ogg","orig":"s2614.ogg"},{"id":"6769","name":"Bounce B 16","category":"Retro Sounds / Actions","file":"Bounce B 16.ogg","orig":"s6769.ogg"},{"id":"4328","name":"Classic Jump A 01","category":"Retro Sounds / Actions","file":"Classic Jump A 01.ogg","orig":"s4328.ogg"},{"id":"6026","name":"Collect Bonus 01","category":"Retro Sounds / Pick Ups","file":"Collect Bonus 01.ogg","orig":"s6026.ogg"},{"id":"6018","name":"Collect Bonus 07","category":"Retro Sounds / Pick Ups","file":"Collect Bonus 07.ogg","orig":"s6018.ogg"},{"id":"6019","name":"Collect Bonus 08","category":"Retro Sounds / Pick Ups","file":"Collect Bonus 08.ogg","orig":"s6019.ogg"},{"id":"7580","name":"Buff 40","category":"Spells and Magic / Buffs","file":"Buff 40.ogg","orig":"s7580.ogg"},{"id":"7798","name":"Electric Spell Cast 02","category":"Spells and Magic / Casting","file":"Electric Spell Cast 02.ogg","orig":"s7798.ogg"},{"id":"2842","name":"Metal Spell Cast 01","category":"Spells and Magic / Casting","file":"Metal Spell Cast 01.ogg","orig":"s2842.ogg"},{"id":"4329","name":"Powerful Dash 02","category":"Spells and Magic / Casting","file":"Powerful Dash 02.ogg","orig":"s4329.ogg"},{"id":"3120","name":"Electric Magic Loop 01","category":"Spells and Magic / Effects","file":"Electric Magic Loop 01.ogg","orig":"s3120.ogg"},{"id":"7975","name":"Fire Cast Loop 08","category":"Spells and Magic / Effects","file":"Fire Cast Loop 08.ogg","orig":"s7975.ogg"},{"id":"7940","name":"Pure Fire Loop","category":"Spells and Magic / Effects","file":"Pure Fire Loop.ogg","orig":"s7940.ogg"},{"id":"7731","name":"Earth Hit 02","category":"Spells and Magic / Impacts","file":"Earth Hit 02.ogg","orig":"s7731.ogg"},{"id":"7636","name":"Electric Hit 07","category":"Spells and Magic / Impacts","file":"Electric Hit 07.ogg","orig":"s7636.ogg"},{"id":"7645","name":"Fire Hit 03","category":"Spells and Magic / Impacts","file":"Fire Hit 03.ogg","orig":"s7645.ogg"},{"id":"7647","name":"Fire Hit 05","category":"Spells and Magic / Impacts","file":"Fire Hit 05.ogg","orig":"s7647.ogg"},{"id":"4332","name":"Ice Hit 01","category":"Spells and Magic / Impacts","file":"Ice Hit 01.ogg","orig":"s4332.ogg"},{"id":"7657","name":"Ice Hit 05","category":"Spells and Magic / Impacts","file":"Ice Hit 05.ogg","orig":"s7657.ogg"},{"id":"7688","name":"Poison Hit 05","category":"Spells and Magic / Impacts","file":"Poison Hit 05.ogg","orig":"s7688.ogg"},{"id":"8039","name":"Fire Spell 02","category":"Spells and Magic / Shoot","file":"Fire Spell 02.ogg","orig":"s8039.ogg"},{"id":"3116","name":"Light Spell Whoosh 01","category":"Spells and Magic / Shoot","file":"Light Spell Whoosh 01.ogg","orig":"s3116.ogg"},{"id":"7838","name":"Nature Spell Shoot 08","category":"Spells and Magic / Shoot","file":"Nature Spell Shoot 08.ogg","orig":"s7838.ogg"},{"id":"7841","name":"Poison Spell Shoot 01","category":"Spells and Magic / Shoot","file":"Poison Spell Shoot 01.ogg","orig":"s7841.ogg"},{"id":"8386","name":"Intrusion detected","category":"Voice / AI Voice","file":"Intrusion detected.ogg","orig":"s8386.ogg"},{"id":"4467","name":"Arr Matey","category":"Voice / Cartoon Pirate","file":"Arr Matey.ogg","orig":"s4467.ogg"},{"id":"4451","name":"Fire In The Hole","category":"Voice / Cartoon Pirate","file":"Fire In The Hole.ogg","orig":"s4451.ogg"},{"id":"4538","name":"Cartoon Groan 01","category":"Voice / Cartoon Voices","file":"Cartoon Groan 01.ogg","orig":"s4538.ogg"},{"id":"4550","name":"Cartoon Scream 01","category":"Voice / Cartoon Voices","file":"Cartoon Scream 01.ogg","orig":"s4550.ogg"},{"id":"4504","name":"Ninja Scream 03","category":"Voice / Cartoon Voices","file":"Ninja Scream 03.ogg","orig":"s4504.ogg"},{"id":"10117","name":"Battle Cry Roar 09","category":"Voice / Demon / Battle Cries","file":"Battle Cry Roar 09.ogg","orig":"s10117.ogg"},{"id":"10322","name":"How Bold Of You 01","category":"Voice / Demon / Common","file":"How Bold Of You 01.ogg","orig":"s10322.ogg"},{"id":"10335","name":"I Am Warning You 02","category":"Voice / Demon / Common","file":"I Am Warning You 02.ogg","orig":"s10335.ogg"},{"id":"10362","name":"Peasant","category":"Voice / Demon / Common","file":"Peasant.ogg","orig":"s10362.ogg"},{"id":"10271","name":"You Should Not Be Here","category":"Voice / Demon / Common","file":"You Should Not Be Here.ogg","orig":"s10271.ogg"},{"id":"5212","name":"I Bestow Unto You","category":"Voice / Demon / Custom","file":"I Bestow Unto You.ogg","orig":"s5212.ogg"},{"id":"4821","name":"I See You 01","category":"Voice / Demon / Custom","file":"I See You 01.ogg","orig":"s4821.ogg"},{"id":"5107","name":"So It Has Come To This","category":"Voice / Demon / Custom","file":"So It Has Come To This.ogg","orig":"s5107.ogg"},{"id":"5143","name":"You Dare Defy The Lord Of Darkness 02","category":"Voice / Demon / Custom","file":"You Dare Defy The Lord Of Darkness 02.ogg","orig":"s5143.ogg"},{"id":"5170","name":"Your Power Is Meaningless","category":"Voice / Demon / Custom","file":"Your Power Is Meaningless.ogg","orig":"s5170.ogg"},{"id":"5043","name":"Explosive Laugh 03","category":"Voice / Demon / Laughing","file":"Explosive Laugh 03.ogg","orig":"s5043.ogg"},{"id":"5035","name":"Low Laugh 01","category":"Voice / Demon / Laughing","file":"Low Laugh 01.ogg","orig":"s5035.ogg"},{"id":"10162","name":"Cough 04","category":"Voice / Demon / Vocalizations","file":"Cough 04.ogg","orig":"s10162.ogg"},{"id":"10163","name":"Cough 05","category":"Voice / Demon / Vocalizations","file":"Cough 05.ogg","orig":"s10163.ogg"},{"id":"5218","name":"Deep Breath 02","category":"Voice / Demon / Vocalizations","file":"Deep Breath 02.ogg","orig":"s5218.ogg"},{"id":"5219","name":"Deep Breath 03","category":"Voice / Demon / Vocalizations","file":"Deep Breath 03.ogg","orig":"s5219.ogg"},{"id":"13341","name":"Keeper Of The Damned 01","category":"Voice / Demon 02 / Custom","file":"Keeper Of The Damned 01.ogg","orig":"s13341.ogg"},{"id":"13585","name":"Merchant Interactions 01","category":"Voice / Merchant 01","file":"Merchant Interactions 01.ogg","orig":"s13585.ogg"},{"id":"13587","name":"Merchant Interactions 03","category":"Voice / Merchant 01","file":"Merchant Interactions 03.ogg","orig":"s13587.ogg"},{"id":"13575","name":"Merchant Interactions 16","category":"Voice / Merchant 01","file":"Merchant Interactions 16.ogg","orig":"s13575.ogg"},{"id":"22327","name":"Fascinating","category":"Voice / Wraith / Common","file":"Fascinating.ogg","orig":"s22327.ogg"},{"id":"22349","name":"I Will Have My Revenge","category":"Voice / Wraith / Common","file":"I Will Have My Revenge.ogg","orig":"s22349.ogg"},{"id":"22427","name":"All Shall Be Revealed","category":"Voice / Wraith / Custom","file":"All Shall Be Revealed.ogg","orig":"s22427.ogg"},{"id":"22608","name":"Always here","category":"Voice / Wraith / Custom","file":"Always here.ogg","orig":"s22608.ogg"},{"id":"22594","name":"Come closer","category":"Voice / Wraith / Custom","file":"Come closer.ogg","orig":"s22594.ogg"},{"id":"22595","name":"Darkness","category":"Voice / Wraith / Custom","file":"Darkness.ogg","orig":"s22595.ogg"},{"id":"22461","name":"Fear The Undead","category":"Voice / Wraith / Custom","file":"Fear The Undead.ogg","orig":"s22461.ogg"},{"id":"22471","name":"I Can Sense Your Presence","category":"Voice / Wraith / Custom","file":"I Can Sense Your Presence.ogg","orig":"s22471.ogg"},{"id":"22584","name":"It is a secret","category":"Voice / Wraith / Custom","file":"It is a secret.ogg","orig":"s22584.ogg"},{"id":"22585","name":"Leave this place","category":"Voice / Wraith / Custom","file":"Leave this place.ogg","orig":"s22585.ogg"},{"id":"22513","name":"Speak Quickly","category":"Voice / Wraith / Custom","file":"Speak Quickly.ogg","orig":"s22513.ogg"},{"id":"22587","name":"There is no way out","category":"Voice / Wraith / Custom","file":"There is no way out.ogg","orig":"s22587.ogg"},{"id":"22588","name":"Time is running out","category":"Voice / Wraith / Custom","file":"Time is running out.ogg","orig":"s22588.ogg"},{"id":"22539","name":"Why Have I Been Summoned","category":"Voice / Wraith / Custom","file":"Why Have I Been Summoned.ogg","orig":"s22539.ogg"},{"id":"22589","name":"Why are you here","category":"Voice / Wraith / Custom","file":"Why are you here.ogg","orig":"s22589.ogg"},{"id":"22607","name":"You again","category":"Voice / Wraith / Custom","file":"You again.ogg","orig":"s22607.ogg"},{"id":"22592","name":"You have no power here","category":"Voice / Wraith / Custom","file":"You have no power here.ogg","orig":"s22592.ogg"},{"id":"22487","name":"Your Efforts So Amusing","category":"Voice / Wraith / Custom","file":"Your Efforts So Amusing.ogg","orig":"s22487.ogg"},{"id":"288","name":"Beam Loop","category":"Weapons / Futuristic / Fire Thrower","file":"Beam Loop.ogg","orig":"s288.ogg"},{"id":"886","name":"Hit Dull 01","category":"Weapons / Medieval / Impact","file":"Hit Dull 01.ogg","orig":"s886.ogg"},{"id":"10775","name":"Slash Blade 04","category":"Weapons / Medieval / Sharp Dagger","file":"Slash Blade 04.ogg","orig":"s10775.ogg"},{"id":"994","name":"Metal Chain Loading 02","category":"Weapons / Medieval / Siege Weapon","file":"Metal Chain Loading 02.ogg","orig":"s994.ogg"},{"id":"996","name":"Move Loop 01","category":"Weapons / Medieval / Siege Weapon","file":"Move Loop 01.ogg","orig":"s996.ogg"},{"id":"998","name":"Move Loop 03","category":"Weapons / Medieval / Siege Weapon","file":"Move Loop 03.ogg","orig":"s998.ogg"},{"id":"715","name":"Detonation 01","category":"Weapons / Modern / Rocket Launcher","file":"Detonation 01.ogg","orig":"s715.ogg"}];
+// ─── SPRITE URLS ─────────────────────────────────────────────────────────────
+const IMG_PLAY = ASSET_PATH + 'GJ_playMusicBtn_001.png';
+const IMG_STOP = ASSET_PATH + 'GJ_stopMusicBtn_001.png';
+const IMG_DL   = ASSET_PATH + 'GJ_downloadBtn_001.png';
 
-const CATEGORIES = ["Aquatic Sounds","Construction and Demolition","Creatures","Events and Fanfares","Explosions and Destruction","Fire and Flames","Footsteps","Impacts and Hits","Interface","Machines and Robotics","Melodic Stingers","Objects","Retro Sounds","Spells and Magic","Voice","Weapons"];
+// ─── CATEGORY COLORS ─────────────────────────────────────────────────────────
+const PALETTE = [
+  '#00cfff','#ff8c42','#69f0ae','#ffd740','#ff5252','#ff6d00','#d7ccc8',
+  '#ff6b6b','#82b1ff','#90caf9','#ea80fc','#ccff90','#ffe57f','#e040fb',
+  '#80deea','#ef9a9a','#a5d6a7','#ffab91','#b39ddb','#f48fb1','#81d4fa',
+  '#c5e1a5','#fff59d','#bcaaa4','#80cbc4','#ce93d8','#ffcc80','#9fa8da',
+  '#b0bec5','#eeeeee'
+];
 
-const COLORS = {"Aquatic Sounds":"#00cfff","Construction and Demolition":"#ff8c42","Creatures":"#69f0ae","Events and Fanfares":"#ffd740","Explosions and Destruction":"#ff5252","Fire and Flames":"#ff6d00","Footsteps":"#d7ccc8","Impacts and Hits":"#ff6b6b","Interface":"#82b1ff","Machines and Robotics":"#90caf9","Melodic Stingers":"#ea80fc","Objects":"#ccff90","Retro Sounds":"#ffe57f","Spells and Magic":"#e040fb","Voice":"#80deea","Weapons":"#ef9a9a"};
+// ─── NATIVE SOUNDS ───────────────────────────────────────────────────────────
+const NATIVE_SOUNDS = [
+  { file:'achievement_01.ogg',  name:'Achievement Unlocked',        cat:'Notification' },
+  { file:'buyItem01.ogg',       name:'Shop Purchase 1',             cat:'Shop' },
+  { file:'buyItem03.ogg',       name:'Shop Purchase 2',             cat:'Shop' },
+  { file:'chest07.ogg',         name:'Chest Reward 1',              cat:'Chest' },
+  { file:'chest08.ogg',         name:'Chest Reward 2',              cat:'Chest' },
+  { file:'chestClick.ogg',      name:'Chest Click',                 cat:'Chest' },
+  { file:'chestLand.ogg',       name:'Chest Landing',               cat:'Chest' },
+  { file:'chestOpen01.ogg',     name:'Chest Open',                  cat:'Chest' },
+  { file:'counter003.ogg',      name:'Counter Tick',                cat:'UI' },
+  { file:'crystal01.ogg',       name:'Crystal Collect',             cat:'Collect' },
+  { file:'door001.ogg',         name:'Vault Door 1',                cat:'Door' },
+  { file:'door01.ogg',          name:'Door Open',                   cat:'Door' },
+  { file:'door02.ogg',          name:'Door Close',                  cat:'Door' },
+  { file:'endStart_02.ogg',     name:'Level Complete Fanfare',      cat:'Level' },
+  { file:'explode_11.ogg',      name:'Death Explosion',             cat:'Level' },
+  { file:'gold01.ogg',          name:'Gold Collect 1',              cat:'Collect' },
+  { file:'gold02.ogg',          name:'Gold Collect 2',              cat:'Collect' },
+  { file:'grunt01.ogg',         name:'Grunt 1',                     cat:'Voice' },
+  { file:'grunt02.ogg',         name:'Grunt 2',                     cat:'Voice' },
+  { file:'grunt03.ogg',         name:'Grunt 3',                     cat:'Voice' },
+  { file:'highscoreGet02.ogg',  name:'Highscore / Coin Tally',     cat:'Level' },
+  { file:'magicExplosion.ogg',  name:'Magic Explosion',             cat:'Effect' },
+  { file:'playSound_01.ogg',    name:'Play Button',                 cat:'UI' },
+  { file:'quitSound_01.ogg',    name:'Quit / Back',                 cat:'UI' },
+  { file:'reward01.ogg',        name:'Reward Unlock',               cat:'Notification' },
+  { file:'secretKey.ogg',       name:'Secret Key Collect',          cat:'Collect' },
+  { file:'unlockPath.ogg',      name:'Path Unlock',                 cat:'Notification' },
+];
 
-// pre-process once
-const sounds = RAW_SOUNDS.map(s => {
-  const parts = s.category.split(' / ');
-  return {
-    ...s,
-    topCat:   parts[0],
-    subLabel: parts.length > 1 ? parts.slice(1).join(' › ') : parts[0],
-    url:      SFX_PATH + s.file,
-    _name:    s.name.toLowerCase(),
-    _cat:     s.category.toLowerCase(),
-  };
-});
-
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let allSounds = [];
+let folders = {};
+let topCategories = [];
+let catColors = {};
+let filtered = [];
+let displayCount = 0;
 let activeCategory = 'All';
 let playing = null;
 let toastTimer = null;
 let searchTimer = null;
 
-// ---- audio ----
+// ─── FETCH & DECODE SFX LIBRARY ─────────────────────────────────────────────
 
-function togglePlay(id) {
-  const card = document.querySelector(`[data-id="${id}"]`);
-  const sound = sounds.find(s => s.id === id);
+async function loadLibrary() {
+  const msg = document.getElementById('loading-msg');
 
+  try {
+    msg.textContent = 'Fetching SFX library from GD servers...';
+    const resp = await fetch(CDN_SFX_LIB);
+    const raw = await resp.text();
+
+    msg.textContent = 'Decoding library data...';
+    // Base64 URL-safe → standard base64
+    const b64 = raw.replace(/-/g, '+').replace(/_/g, '/');
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+
+    // Zlib inflate
+    const inflated = pako.inflate(bytes, { to: 'string' });
+
+    msg.textContent = 'Parsing sound effects...';
+    parseLibrary(inflated);
+
+    // Done
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('stock-ui').style.display = '';
+    updateStats();
+    buildFilters();
+    render();
+  } catch (err) {
+    msg.textContent = 'Failed to load SFX library. Try refreshing!';
+    console.error('Library load error:', err);
+  }
+}
+
+function parseLibrary(text) {
+  const parts = text.split('|');
+  const filesPart = parts[0];
+  const creditsPart = parts[1] || '';
+
+  const entries = filesPart.split(';');
+  folders = {};
+  allSounds = [];
+
+  for (const entry of entries) {
+    const e = entry.trim();
+    if (!e) continue;
+    const f = e.split(',');
+    if (f.length < 4) continue;
+
+    const id = parseInt(f[0]);
+    const name = f[1];
+    const isFolder = f[2] === '1';
+    const parent = parseInt(f[3]);
+    const size = f.length > 4 ? parseInt(f[4]) : 0;
+    const durRaw = f.length > 5 ? parseInt(f[5]) : 0;
+
+    if (isFolder) {
+      if (id !== 1) folders[id] = name;
+    } else {
+      allSounds.push({
+        id: String(id),
+        name,
+        parentId: parent,
+        size,
+        dur: (durRaw / 100).toFixed(1),
+        orig: `s${id}.ogg`,
+        url: STOCK_PATH + `s${id}.ogg`,
+      });
+    }
+  }
+
+  // Resolve categories
+  const topCatSet = new Set();
+  for (const s of allSounds) {
+    const catName = folders[s.parentId] || 'Uncategorized';
+    s.category = catName;
+    const top = catName.split(' / ')[0];
+    s.topCat = top;
+    s.subLabel = catName.includes(' / ') ? catName.split(' / ').slice(1).join(' › ') : catName;
+    s._name = s.name.toLowerCase();
+    s._cat = s.category.toLowerCase();
+    topCatSet.add(top);
+  }
+
+  topCategories = [...topCatSet].sort();
+  topCategories.forEach((cat, i) => {
+    catColors[cat] = PALETTE[i % PALETTE.length];
+  });
+
+  allSounds.sort((a, b) => a.name.localeCompare(b.name));
+
+  // Parse credits for footer
+  if (creditsPart) {
+    const creditsEl = document.getElementById('footer-credits');
+    let credHtml = '';
+    for (const c of creditsPart.split(';')) {
+      const ct = c.trim();
+      if (!ct.includes(',')) continue;
+      const [cname, curl] = ct.split(',', 2);
+      if (cname && curl) {
+        credHtml += `<a href="${curl}" target="_blank" rel="noopener">${cname}</a> · `;
+      }
+    }
+    if (credHtml) {
+      creditsEl.innerHTML = 'Licensed SFX from: ' + credHtml +
+        '<br>Theme by <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a> · ' +
+        'Docs by <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a> · ' +
+        'Archive by <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>';
+    }
+  }
+}
+
+// ─── STATS ───────────────────────────────────────────────────────────────────
+
+function updateStats() {
+  document.getElementById('stat-stock').textContent = allSounds.length.toLocaleString();
+  document.getElementById('stat-cats').textContent = topCategories.length;
+  document.getElementById('header-sub').textContent =
+    `${allSounds.length.toLocaleString()}+ stock sounds from the full Geometry Dash SFX library!`;
+}
+
+// ─── AUDIO ───────────────────────────────────────────────────────────────────
+
+function togglePlay(url, card) {
   if (playing?.card === card) { stopCurrent(); return; }
-
   stopCurrent();
 
-  const audio = new Audio(sound.url);
+  const audio = new Audio(url);
   audio.onended = () => { setCardPlaying(card, false); playing = null; };
   audio.onerror = () => { showToast('Could not load audio!'); setCardPlaying(card, false); playing = null; };
   audio.play();
@@ -641,156 +940,210 @@ function stopCurrent() {
 }
 
 function setCardPlaying(card, on) {
-  const btn = card.querySelector('.btn-play');
   card.classList.toggle('playing', on);
+  const btn = card.querySelector('.btn-play');
+  const img = btn.querySelector('img');
+  if (img) img.src = on ? IMG_STOP : IMG_PLAY;
   btn.classList.toggle('playing', on);
-  btn.textContent = on ? '■ Stop' : '▶ Play';
 }
 
 window.addEventListener('pagehide', stopCurrent);
 
-// ---- rendering ----
+// ─── CARD HTML ───────────────────────────────────────────────────────────────
 
-function render() {
+function makeCard(s, color, isNative) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.url = isNative ? (NATIVE_PATH + s.file) : s.url;
+  card.style.setProperty('--cat-accent', color);
+
+  const dlFile = isNative ? s.file : s.orig;
+  const dlUrl = isNative ? (NATIVE_PATH + s.file) : s.url;
+  const catLabel = isNative ? s.cat : s.subLabel;
+  const idLabel = isNative ? s.file : s.orig;
+  const durLabel = s.dur ? `${s.dur}s` : '';
+
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="cat-dot" style="background:${color}"></div>
+      <div class="card-info">
+        <div class="card-name" title="${s.name}">${s.name}</div>
+        <div class="card-cat">${catLabel}</div>
+      </div>
+    </div>
+    <div class="card-actions">
+      <button class="btn-play"><img src="${IMG_PLAY}" alt="Play"></button>
+      <a class="btn-dl" href="${dlUrl}" download="${dlFile}" title="Download"><img src="${IMG_DL}" alt="Download"></a>
+    </div>
+    <div class="card-footer">
+      <div class="wave-bars">
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      ${durLabel ? `<div class="card-dur">${durLabel}</div>` : ''}
+      <div class="card-id">${idLabel}</div>
+    </div>
+  `;
+  return card;
+}
+
+// ─── STOCK RENDERING (paginated) ─────────────────────────────────────────────
+
+function applyFilter() {
   const q = document.getElementById('search').value.toLowerCase().trim();
-  const grid = document.getElementById('grid');
-  const noRes = document.getElementById('no-results');
-
-  const filtered = sounds.filter(s => {
+  filtered = allSounds.filter(s => {
     if (activeCategory !== 'All' && s.topCat !== activeCategory) return false;
     if (q && !s._name.includes(q) && !s._cat.includes(q) && !s.orig.includes(q)) return false;
     return true;
   });
+  displayCount = 0;
+}
+
+function render() {
+  applyFilter();
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  displayCount = 0;
+  showMore();
 
   document.getElementById('results-count').innerHTML =
-    `Showing <strong>${filtered.length}</strong> of ${sounds.length} sounds`;
+    `Showing <strong>${Math.min(displayCount, filtered.length)}</strong> of <strong>${filtered.length.toLocaleString()}</strong> sounds`;
+}
 
-  if (!filtered.length) {
-    grid.style.display = 'none';
-    noRes.style.display = 'block';
-    return;
-  }
+function showMore() {
+  const grid = document.getElementById('grid');
+  const noRes = document.getElementById('no-results');
+  const loadRow = document.getElementById('load-more-row');
+  const btn = document.getElementById('btn-load-more');
 
-  grid.style.display = '';
-  noRes.style.display = 'none';
-
+  const end = Math.min(displayCount + PAGE_SIZE, filtered.length);
   const frag = document.createDocumentFragment();
 
-  filtered.forEach(s => {
-    const color = COLORS[s.topCat] || 'rgba(255,255,255,0.3)';
+  for (let i = displayCount; i < end; i++) {
+    const s = filtered[i];
+    const color = catColors[s.topCat] || 'rgba(255,255,255,0.3)';
+    frag.appendChild(makeCard(s, color, false));
+  }
 
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.id = s.id;
-    card.style.setProperty('--cat-accent', color);
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="cat-dot" style="background:${color}"></div>
-        <div class="card-info">
-          <div class="card-name" title="${s.name}">${s.name}</div>
-          <div class="card-cat">${s.subLabel}</div>
-        </div>
-      </div>
-      <div class="card-actions">
-        <button class="btn-play">▶ Play</button>
-        <a class="btn-dl" href="${s.url}" download="${s.file}" title="Download ${s.file}">⬇</a>
-      </div>
-      <div class="card-footer">
-        <div class="wave-bars">
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-        </div>
-        <div class="card-id" title="Original ID: ${s.orig}">${s.orig}</div>
-      </div>
-    `;
-    frag.appendChild(card);
-  });
-
-  grid.innerHTML = '';
   grid.appendChild(frag);
+  displayCount = end;
+
+  noRes.style.display = filtered.length === 0 ? 'block' : 'none';
+  grid.style.display = filtered.length === 0 ? 'none' : '';
+
+  if (displayCount < filtered.length) {
+    loadRow.style.display = '';
+    btn.textContent = `Load More (${(filtered.length - displayCount).toLocaleString()} remaining)`;
+  } else {
+    loadRow.style.display = 'none';
+  }
+
+  document.getElementById('results-count').innerHTML =
+    `Showing <strong>${displayCount.toLocaleString()}</strong> of <strong>${filtered.length.toLocaleString()}</strong> sounds`;
 }
+
+// ─── STOCK EVENT LISTENERS ───────────────────────────────────────────────────
 
 document.getElementById('grid').addEventListener('click', e => {
   const btn = e.target.closest('.btn-play');
-  if (btn) togglePlay(btn.closest('.card').dataset.id);
+  if (btn) {
+    const card = btn.closest('.card');
+    togglePlay(card.dataset.url, card);
+  }
 });
 
 document.getElementById('search').addEventListener('input', () => {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(render, 250);
+  searchTimer = setTimeout(render, 300);
 });
 
-// ---- category filters ----
+document.getElementById('btn-load-more').addEventListener('click', showMore);
+
+// ─── CATEGORY FILTERS ───────────────────────────────────────────────────────
 
 function buildFilters() {
   const wrap = document.getElementById('cat-filters');
-  ['All', ...CATEGORIES].forEach(cat => {
+  wrap.innerHTML = '';
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'cat-pill active';
+  allBtn.textContent = 'All';
+  allBtn.addEventListener('click', () => selectCat('All', allBtn));
+  wrap.appendChild(allBtn);
+
+  for (const cat of topCategories) {
     const btn = document.createElement('button');
-    btn.className = 'cat-pill' + (cat === 'All' ? ' active' : '');
-    const color = COLORS[cat];
-    btn.innerHTML = color
-      ? `<span class="pill-dot" style="background:${color}"></span>${cat}`
-      : cat;
-    btn.addEventListener('click', () => {
-      activeCategory = cat;
-      wrap.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      render();
-    });
+    btn.className = 'cat-pill';
+    const color = catColors[cat];
+    btn.innerHTML = `<span class="pill-dot" style="background:${color}"></span>${cat}`;
+    btn.addEventListener('click', () => selectCat(cat, btn));
     wrap.appendChild(btn);
-  });
-}
-
-// ---- zip download ----
-
-async function downloadZip() {
-  const btn  = document.getElementById('btn-zip');
-  const area = document.getElementById('zip-area');
-  const msg  = document.getElementById('zip-msg');
-  const bar  = document.getElementById('zip-bar');
-
-  btn.disabled = true;
-  area.style.display = 'block';
-
-  const zip = new JSZip();
-
-  for (let i = 0; i < sounds.length; i++) {
-    const s = sounds[i];
-    try {
-      const blob = await fetch(s.url).then(r => r.blob());
-      zip.file(s.file, blob);
-    } catch {
-      console.warn('skipping', s.file);
-    }
-    msg.textContent = `Packing... ${i + 1} / ${sounds.length}`;
-    bar.style.width = ((i + 1) / sounds.length * 100) + '%';
   }
-
-  msg.textContent = 'Generating zip...';
-  const content = await zip.generateAsync({ type: 'blob' }, ({ percent }) => {
-    bar.style.width = percent.toFixed(0) + '%';
-  });
-
-  const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(content),
-    download: 'gd-sound-library.zip',
-  });
-  a.click();
-  URL.revokeObjectURL(a.href);
-
-  msg.textContent = 'Done!';
-  bar.style.width = '100%';
-  setTimeout(() => {
-    area.style.display = 'none';
-    bar.style.width = '0';
-    btn.disabled = false;
-  }, 2200);
 }
 
-document.getElementById('btn-zip').addEventListener('click', downloadZip);
+function selectCat(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('#cat-filters .cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
 
-// ---- toast ----
+// ─── NATIVE SOUNDS ───────────────────────────────────────────────────────────
+
+const NATIVE_COLORS = {
+  'Notification':'#ffd740', 'Shop':'#ff8c42', 'Chest':'#ea80fc',
+  'UI':'#82b1ff', 'Collect':'#69f0ae', 'Door':'#bcaaa4',
+  'Level':'#ff5252', 'Voice':'#80deea', 'Effect':'#e040fb',
+};
+
+function renderNative(query) {
+  const grid = document.getElementById('native-grid');
+  const noRes = document.getElementById('native-no-results');
+  const q = (query || '').toLowerCase().trim();
+
+  const list = NATIVE_SOUNDS.filter(s => {
+    if (!q) return true;
+    return s.name.toLowerCase().includes(q) || s.file.toLowerCase().includes(q) || s.cat.toLowerCase().includes(q);
+  });
+
+  grid.innerHTML = '';
+  noRes.style.display = list.length === 0 ? 'block' : 'none';
+  grid.style.display = list.length === 0 ? 'none' : '';
+
+  const frag = document.createDocumentFragment();
+  for (const s of list) {
+    const color = NATIVE_COLORS[s.cat] || '#aaa';
+    frag.appendChild(makeCard(s, color, true));
+  }
+  grid.appendChild(frag);
+}
+
+document.getElementById('native-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.btn-play');
+  if (btn) {
+    const card = btn.closest('.card');
+    togglePlay(card.dataset.url, card);
+  }
+});
+
+document.getElementById('native-search').addEventListener('input', e => {
+  renderNative(e.target.value);
+});
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    stopCurrent();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
 
 function showToast(text) {
   const toast = document.getElementById('toast');
@@ -800,9 +1153,10 @@ function showToast(text) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// init
-buildFilters();
-render();
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+renderNative();
+loadLibrary();
 </script>
 </body>
 </html>
