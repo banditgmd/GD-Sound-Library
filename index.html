@@ -45,25 +45,15 @@ header{text-align:center;padding:40px 20px 20px}
 .tab-btn.active{background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));box-shadow:inset 0 3px 0 rgba(255,255,255,0.35),inset 0 -2px 0 rgba(0,0,0,0.2),0 5px 0 #1A3A08;color:#fff}
 .tab-content{display:none}.tab-content.active{display:block}
 
-/* ---- category groups (subcategorized) ---- */
-.cat-filters{display:flex;flex-direction:column;gap:8px}
-.cat-group{background:rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
-.cat-group-title{font-family:'Pusab',sans-serif;font-size:13px;letter-spacing:1px;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#fff;background:rgba(0,0,0,0.25);user-select:none;transition:background .15s;text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000}
-.cat-group-title:hover{background:rgba(0,0,0,0.4)}
-.cat-group-title.active{background:rgba(122,222,45,0.15)}
-.cat-group-title .arrow{display:inline-block;transition:transform .2s;font-size:10px}
-.cat-group.open .arrow{transform:rotate(90deg)}
-.cat-group-title .grp-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,0.5)}
-.cat-group-title .grp-count{margin-left:auto;font-size:10px;color:rgba(255,255,255,0.35)}
-.cat-sub-pills{display:none;flex-wrap:wrap;gap:6px;padding:8px 12px}
-.cat-group.open .cat-sub-pills{display:flex}
-.cat-pill{font-family:'Pusab',sans-serif;font-size:10px;letter-spacing:.6px;padding:5px 12px;border-radius:7px;cursor:pointer;background:linear-gradient(to bottom,#4A5B8A,#323E6A);border:2px solid #000;box-shadow:inset 0 2px 0 rgba(255,255,255,0.18),0 2px 0 #0a0a1a;color:#d0d8ff;text-shadow:1px 1px 0 #000;transition:filter .1s,transform .08s}
-.cat-pill:hover{filter:brightness(1.2)}.cat-pill:active{transform:translateY(1px)}
-.cat-pill.active{background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),0 2px 0 var(--green-shadow);color:#fff}
-.cat-all-row{display:flex;margin-bottom:10px}
-.cat-pill-all{font-family:'Pusab',sans-serif;font-size:13px;letter-spacing:1px;padding:8px 24px;border-radius:8px;cursor:pointer;background:linear-gradient(to bottom,var(--green-hi),var(--green-lo));border:3px solid #000;box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),0 3px 0 #1A3A08;color:#fff;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000;transition:filter .1s,transform .08s}
-.cat-pill-all:hover{filter:brightness(1.1)}.cat-pill-all:active{transform:translateY(2px)}
-.cat-pill-all.inactive{background:linear-gradient(to bottom,#4A5B8A,#323E6A);color:#d0d8ff}
+/* ---- category dropdowns ---- */
+.cat-drop-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gd-select-wrap{position:relative;flex:1;min-width:140px}
+.gd-select{font-family:'Pusab',sans-serif;font-size:13px;letter-spacing:.8px;width:100%;padding:10px 36px 10px 14px;border-radius:10px;cursor:pointer;border:3px solid #000;background:linear-gradient(to bottom,#4A5B8A,#323E6A);box-shadow:inset 0 2px 0 rgba(255,255,255,0.2),0 4px 0 #111;color:#fff;text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;appearance:none;-webkit-appearance:none;outline:none;transition:border-color .15s}
+.gd-select:hover{filter:brightness(1.1)}
+.gd-select:focus{border-color:var(--gold);box-shadow:inset 0 2px 0 rgba(255,255,255,0.2),0 4px 0 #111,0 0 0 2px rgba(255,200,0,0.3)}
+.gd-select option{background:#2A180A;color:#fff;font-family:'Pusab',sans-serif;font-size:12px;padding:6px}
+.gd-select-wrap::after{content:'▼';position:absolute;right:14px;bottom:16px;font-size:10px;color:rgba(255,255,255,0.5);pointer-events:none;text-shadow:1px 1px 0 #000}
+.gd-select-label{font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.4);text-shadow:1px 1px 0 #000;margin-bottom:4px;display:block}
 
 /* ---- search ---- */
 .search-wrap{position:relative;margin-bottom:14px}
@@ -158,8 +148,10 @@ footer{text-align:center;padding:28px 20px 40px}
       <div class="panel-box"><div class="panel-white"><div class="panel-inner">
         <div class="panel-title"><span>Search &amp; Filter</span></div>
         <div class="search-wrap"><input id="search" type="text" placeholder="Search by name, category, or ID..." autocomplete="off" spellcheck="false"/></div>
-        <div class="cat-all-row"><button class="cat-pill-all" id="btn-cat-all">Show All</button></div>
-        <div class="cat-filters" id="cat-filters"></div>
+        <div class="cat-drop-row" id="cat-filters">
+          <div class="gd-select-wrap"><span class="gd-select-label">CATEGORY</span><select class="gd-select" id="sel-cat"><option value="All">All Categories</option></select></div>
+          <div class="gd-select-wrap"><span class="gd-select-label">SUBCATEGORY</span><select class="gd-select" id="sel-sub" disabled><option value="All">All Subcategories</option></select></div>
+        </div>
       </div></div></div>
       <div class="results-bar"><div class="results-count" id="results-count"></div></div>
       <div class="sfx-grid" id="grid"></div>
@@ -277,37 +269,30 @@ document.getElementById('search').addEventListener('input',()=>{clearTimeout(sea
 document.getElementById('btn-load-more').addEventListener('click',showMore);
 
 function buildFilters(){
-  const wrap=document.getElementById('cat-filters');wrap.innerHTML='';
-  const allBtn=document.getElementById('btn-cat-all');
-  allBtn.onclick=()=>{activeCategory='All';clearActive();allBtn.classList.remove('inactive');render();};
+  const selCat=document.getElementById('sel-cat'),selSub=document.getElementById('sel-sub');
+  selCat.innerHTML='<option value="All">All Categories</option>';
   for(const top of topCategories){
-    const color=catColors[top],subs=subCatMap[top]||[];
     const count=allSounds.filter(s=>s.topCat===top).length;
-    const group=document.createElement('div');group.className='cat-group';
-    const header=document.createElement('div');header.className='cat-group-title';
-    header.innerHTML='<span class="arrow">▶</span><span class="grp-dot" style="background:'+color+'"></span>'+top+'<span class="grp-count">'+count.toLocaleString()+'</span>';
-    header.addEventListener('click',()=>{
-      if(subs.length>0)group.classList.toggle('open');
-      activeCategory=top;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');header.classList.add('active');render();
-    });
-    group.appendChild(header);
-    if(subs.length>0){
-      const pw=document.createElement('div');pw.className='cat-sub-pills';
-      const allS=document.createElement('button');allS.className='cat-pill active';allS.textContent='All '+top;
-      allS.addEventListener('click',e=>{e.stopPropagation();activeCategory=top;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');allS.classList.add('active');header.classList.add('active');render();});
-      pw.appendChild(allS);
-      for(const sub of subs){
-        const fullCat=top+' / '+sub;
-        const pill=document.createElement('button');pill.className='cat-pill';pill.textContent=sub;
-        pill.addEventListener('click',e=>{e.stopPropagation();activeCategory=fullCat;clearActive();document.getElementById('btn-cat-all').classList.add('inactive');pill.classList.add('active');header.classList.add('active');render();});
-        pw.appendChild(pill);
-      }
-      group.appendChild(pw);
-    }
-    wrap.appendChild(group);
+    const opt=document.createElement('option');opt.value=top;opt.textContent=top+' ('+count.toLocaleString()+')';selCat.appendChild(opt);
   }
+  selCat.addEventListener('change',()=>{
+    const top=selCat.value;
+    selSub.innerHTML='<option value="All">All Subcategories</option>';
+    if(top!=='All'&&subCatMap[top]&&subCatMap[top].length>0){
+      selSub.disabled=false;
+      for(const sub of subCatMap[top]){
+        const fullCat=top+' / '+sub;
+        const count=allSounds.filter(s=>s.category===fullCat).length;
+        const opt=document.createElement('option');opt.value=fullCat;opt.textContent=sub+' ('+count.toLocaleString()+')';selSub.appendChild(opt);
+      }
+    }else{selSub.disabled=true;}
+    activeCategory=top;render();
+  });
+  selSub.addEventListener('change',()=>{
+    activeCategory=selSub.value==='All'?selCat.value:selSub.value;
+    render();
+  });
 }
-function clearActive(){document.querySelectorAll('.cat-pill,.cat-group-title').forEach(el=>el.classList.remove('active'));}
 
 const NATIVE_COLORS={'Notification':'#ffd740','Shop':'#ff8c42','Chest':'#ea80fc','UI':'#82b1ff','Collect':'#69f0ae','Door':'#bcaaa4','Level':'#ff5252','Voice':'#80deea','Effect':'#e040fb'};
 function renderNative(query){
