@@ -404,67 +404,41 @@ header { text-align: center; padding: 40px 20px 20px; }
   text-overflow: ellipsis;
 }
 
-.card-actions { display: flex; gap: 7px; align-items: center; }
+.card-actions { display: flex; gap: 10px; align-items: center; justify-content: center; }
 
-/* ---- GD sprite buttons ---- */
+/* ---- GD sprite buttons (bare images) ---- */
 
 .btn-play {
-  flex: 1;
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  background: linear-gradient(to bottom, var(--green-hi), var(--green-lo));
-  border: 2px solid var(--green-border);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3), 0 3px 0 var(--green-shadow);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  transition: filter 0.1s, transform 0.08s;
   height: 36px;
-}
-
-.btn-play:hover { filter: brightness(1.1); }
-.btn-play:active { transform: translateY(1px); box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 1px 0 var(--green-shadow); }
-
-.btn-play.playing {
-  background: linear-gradient(to bottom, #ff6b6b, #cc3333);
-  border-color: #881111;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.25), 0 3px 0 #550A0A;
-}
-
-.btn-play img {
-  height: 22px;
   width: auto;
-  image-rendering: auto;
-  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.4));
+  cursor: pointer;
+  transition: filter 0.1s, transform 0.08s;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
+  user-select: none;
+  -webkit-user-drag: none;
+  flex-shrink: 0;
 }
+
+.btn-play:hover { filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5)) brightness(1.2); }
+.btn-play:active { transform: translateY(2px); filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.5)) brightness(0.95); }
 
 .btn-dl {
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  background: linear-gradient(to bottom, var(--blue-hi), var(--blue-lo));
-  border: 2px solid #2A3D7A;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 3px 0 #1A2D5A;
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   flex-shrink: 0;
+  text-decoration: none;
   transition: filter 0.1s, transform 0.08s;
-  height: 36px;
 }
-
-.btn-dl:hover { filter: brightness(1.15); }
-.btn-dl:active { transform: translateY(1px); }
 
 .btn-dl img {
-  height: 22px;
+  height: 36px;
   width: auto;
-  image-rendering: auto;
-  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.4));
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
+  -webkit-user-drag: none;
 }
+
+.btn-dl:hover { filter: brightness(1.2); }
+.btn-dl:active { transform: translateY(2px); }
 
 /* card footer */
 .card-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
@@ -636,7 +610,7 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
 <header>
   <div class="header-title shadow-lg">GD Sound Library</div>
-  <div class="header-subtitle" id="header-sub">Loading the full Geometry Dash sound library...</div>
+  <div class="header-subtitle" id="header-sub">The complete Geometry Dash sound effects library!</div>
   <div class="header-stats" id="header-stats">
     <div class="stat-badge shadow-sm"><strong id="stat-stock">...</strong> Stock SFX</div>
     <div class="stat-badge shadow-sm"><strong id="stat-native">27</strong> Native Sounds</div>
@@ -658,7 +632,7 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
     <div id="loading-screen">
       <div class="loading-spinner"></div>
-      <div id="loading-msg">Fetching SFX library from GD servers...</div>
+      <div id="loading-msg">Loading SFX catalog...</div>
     </div>
 
     <div id="stock-ui" style="display:none;">
@@ -728,11 +702,9 @@ footer { text-align: center; padding: 28px 20px 40px; }
 
 <div id="toast"></div>
 
-<!-- pako for zlib decompression -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const CDN_SFX_LIB  = 'https://geometrydashfiles.b-cdn.net/sfx/sfxlibrary.dat';
+const CATALOG_URL   = 'sfx_catalog.json';
 const STOCK_PATH    = 'sfx/stock/';
 const NATIVE_PATH   = 'sfx/native/';
 const ASSET_PATH    = 'assets/';
@@ -785,7 +757,6 @@ const NATIVE_SOUNDS = [
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let allSounds = [];
-let folders = {};
 let topCategories = [];
 let catColors = {};
 let filtered = [];
@@ -801,22 +772,53 @@ async function loadLibrary() {
   const msg = document.getElementById('loading-msg');
 
   try {
-    msg.textContent = 'Fetching SFX library from GD servers...';
-    const resp = await fetch(CDN_SFX_LIB);
-    const raw = await resp.text();
+    msg.textContent = 'Loading SFX catalog...';
+    const resp = await fetch(CATALOG_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const catalog = await resp.json();
 
-    msg.textContent = 'Decoding library data...';
-    // Base64 URL-safe → standard base64
-    const b64 = raw.replace(/-/g, '+').replace(/_/g, '/');
-    const bin = atob(b64);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    msg.textContent = 'Building sound library...';
 
-    // Zlib inflate
-    const inflated = pako.inflate(bytes, { to: 'string' });
+    // Build allSounds from catalog
+    const topCatSet = new Set();
+    allSounds = catalog.sounds.map(s => {
+      const cat = s.cat || 'Uncategorized';
+      const top = cat.split(' / ')[0];
+      topCatSet.add(top);
+      return {
+        id: String(s.id),
+        name: s.name,
+        category: cat,
+        topCat: top,
+        subLabel: cat.includes(' / ') ? cat.split(' / ').slice(1).join(' › ') : cat,
+        size: s.size,
+        dur: s.dur ? String(s.dur) : '',
+        orig: `s${s.id}.ogg`,
+        url: STOCK_PATH + `s${s.id}.ogg`,
+        _name: s.name.toLowerCase(),
+        _cat: cat.toLowerCase(),
+      };
+    });
 
-    msg.textContent = 'Parsing sound effects...';
-    parseLibrary(inflated);
+    topCategories = [...topCatSet].sort();
+    topCategories.forEach((cat, i) => {
+      catColors[cat] = PALETTE[i % PALETTE.length];
+    });
+
+    allSounds.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Credits
+    if (catalog.credits && catalog.credits.length) {
+      const creditsEl = document.getElementById('footer-credits');
+      let credHtml = 'Licensed SFX from: ';
+      credHtml += catalog.credits.map(c =>
+        `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`
+      ).join(' · ');
+      credHtml += '<br>Theme by <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a> · ' +
+        'Docs by <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a> · ' +
+        'Archive by <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>';
+      creditsEl.innerHTML = credHtml;
+    }
 
     // Done
     document.getElementById('loading-screen').style.display = 'none';
@@ -825,86 +827,8 @@ async function loadLibrary() {
     buildFilters();
     render();
   } catch (err) {
-    msg.textContent = 'Failed to load SFX library. Try refreshing!';
+    msg.textContent = 'Failed to load SFX catalog. Try refreshing!';
     console.error('Library load error:', err);
-  }
-}
-
-function parseLibrary(text) {
-  const parts = text.split('|');
-  const filesPart = parts[0];
-  const creditsPart = parts[1] || '';
-
-  const entries = filesPart.split(';');
-  folders = {};
-  allSounds = [];
-
-  for (const entry of entries) {
-    const e = entry.trim();
-    if (!e) continue;
-    const f = e.split(',');
-    if (f.length < 4) continue;
-
-    const id = parseInt(f[0]);
-    const name = f[1];
-    const isFolder = f[2] === '1';
-    const parent = parseInt(f[3]);
-    const size = f.length > 4 ? parseInt(f[4]) : 0;
-    const durRaw = f.length > 5 ? parseInt(f[5]) : 0;
-
-    if (isFolder) {
-      if (id !== 1) folders[id] = name;
-    } else {
-      allSounds.push({
-        id: String(id),
-        name,
-        parentId: parent,
-        size,
-        dur: (durRaw / 100).toFixed(1),
-        orig: `s${id}.ogg`,
-        url: STOCK_PATH + `s${id}.ogg`,
-      });
-    }
-  }
-
-  // Resolve categories
-  const topCatSet = new Set();
-  for (const s of allSounds) {
-    const catName = folders[s.parentId] || 'Uncategorized';
-    s.category = catName;
-    const top = catName.split(' / ')[0];
-    s.topCat = top;
-    s.subLabel = catName.includes(' / ') ? catName.split(' / ').slice(1).join(' › ') : catName;
-    s._name = s.name.toLowerCase();
-    s._cat = s.category.toLowerCase();
-    topCatSet.add(top);
-  }
-
-  topCategories = [...topCatSet].sort();
-  topCategories.forEach((cat, i) => {
-    catColors[cat] = PALETTE[i % PALETTE.length];
-  });
-
-  allSounds.sort((a, b) => a.name.localeCompare(b.name));
-
-  // Parse credits for footer
-  if (creditsPart) {
-    const creditsEl = document.getElementById('footer-credits');
-    let credHtml = '';
-    for (const c of creditsPart.split(';')) {
-      const ct = c.trim();
-      if (!ct.includes(',')) continue;
-      const [cname, curl] = ct.split(',', 2);
-      if (cname && curl) {
-        credHtml += `<a href="${curl}" target="_blank" rel="noopener">${cname}</a> · `;
-      }
-    }
-    if (credHtml) {
-      creditsEl.innerHTML = 'Licensed SFX from: ' + credHtml +
-        '<br>Theme by <a href="https://gdcolon.com" target="_blank" rel="noopener">GD Colon</a> · ' +
-        'Docs by <a href="https://boomlings.dev" target="_blank" rel="noopener">GD Docs</a> · ' +
-        'Archive by <a href="https://cvolton.eu/sfx/" target="_blank" rel="noopener">cvolton</a>';
-    }
   }
 }
 
@@ -941,10 +865,8 @@ function stopCurrent() {
 
 function setCardPlaying(card, on) {
   card.classList.toggle('playing', on);
-  const btn = card.querySelector('.btn-play');
-  const img = btn.querySelector('img');
+  const img = card.querySelector('.btn-play');
   if (img) img.src = on ? IMG_STOP : IMG_PLAY;
-  btn.classList.toggle('playing', on);
 }
 
 window.addEventListener('pagehide', stopCurrent);
@@ -972,7 +894,7 @@ function makeCard(s, color, isNative) {
       </div>
     </div>
     <div class="card-actions">
-      <button class="btn-play"><img src="${IMG_PLAY}" alt="Play"></button>
+      <img class="btn-play" src="${IMG_PLAY}" alt="Play">
       <a class="btn-dl" href="${dlUrl}" download="${dlFile}" title="Download"><img src="${IMG_DL}" alt="Download"></a>
     </div>
     <div class="card-footer">
