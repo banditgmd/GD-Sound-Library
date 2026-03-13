@@ -6,7 +6,7 @@
 <title>GD Sound Library</title>
 <style>
 @font-face{font-family:'Pusab';src:url('https://gdcolon.com/assets/Pusab.ttf') format('truetype');font-display:swap}
-:root{--brown-dark:#2E1A0A;--brown-mid:#5C3A1E;--brown-panel:#3D200E;--gold:#FFC800;--green-hi:#7ADE2D;--green-lo:#5BB520;--green-border:#3D7A10;--green-shadow:#2A5510;--blue-hi:#5A7ACA;--blue-lo:#3A5AAA}
+:root{--brown-dark:#2E1A0A;--brown-mid:#5C3A1E;--brown-panel:#3D200E;--gold:#FFC800;--green-hi:#7ADE2D;--green-lo:#5BB520;--green-border:#3D7A10;--green-shadow:#2A5510;--blue-hi:#5A7ACA;--blue-lo:#3A5AAA;--img-play:url('assets/GJ_playMusicBtn_001.png');--img-stop:url('assets/GJ_stopMusicBtn_001.png');--img-dl:url('assets/GJ_downloadBtn_001.png')}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Pusab','Arial Black',sans-serif;background:#287DFF url('https://gdcolon.com/assets/gdfont/bg.jpg') repeat fixed center/cover;min-height:100vh;color:#fff;overflow-x:hidden}
 
@@ -94,17 +94,14 @@ header{text-align:center;padding:40px 20px 20px}
 .card-name{font-size:14px;letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;color:#fff}
 .card-cat{font-size:10px;letter-spacing:.5px;color:var(--cat-accent,rgba(255,255,255,0.5));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* play/download sprite buttons */
+/* play/download sprite buttons — CSS background-image, no <img> per card */
 .card-actions{display:flex;gap:14px;align-items:center;justify-content:center;padding:6px 0}
-.btn-play{height:52px;width:auto;cursor:pointer;transition:transform .08s,filter .1s;filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7));user-select:none;-webkit-user-drag:none}
-.btn-play:hover{filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7)) brightness(1.15);transform:scale(1.1)}
-.btn-play:active{transform:scale(0.92) translateY(3px);filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.7))}
-
-.btn-dl{display:inline-flex;align-items:center;flex-shrink:0;text-decoration:none;transition:transform .08s,filter .1s}
-.btn-dl img{height:52px;width:auto;filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7));-webkit-user-drag:none;cursor:pointer}
-.btn-dl:hover{transform:scale(1.1)}
-.btn-dl:hover img{filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7)) brightness(1.15)}
-.btn-dl:active{transform:scale(0.92) translateY(3px)}
+.btn-play,.btn-dl{width:52px;height:52px;flex-shrink:0;cursor:pointer;background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7));transition:transform .08s,filter .1s;user-select:none}
+.btn-play{background-image:var(--img-play)}
+.btn-play.is-stop{background-image:var(--img-stop)}
+.btn-dl{display:block;background-image:var(--img-dl);text-decoration:none}
+.btn-play:hover,.btn-dl:hover{filter:drop-shadow(2px 4px 0 rgba(0,0,0,0.7)) brightness(1.15);transform:scale(1.1)}
+.btn-play:active,.btn-dl:active{transform:scale(0.92) translateY(3px);filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.7))}
 
 .card-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px}
 .wave-bars{display:none;align-items:flex-end;gap:2px;height:16px;margin-right:auto}
@@ -147,7 +144,7 @@ footer{text-align:center;padding:28px 20px 40px}
   .sfx-grid{grid-template-columns:1fr}
   .header-title{font-size:32px}
   .tab-btn{font-size:12px;padding:9px 16px}
-  .btn-play,.btn-dl img{height:44px}
+  .btn-play,.btn-dl{width:44px;height:44px}
 }
 </style>
 </head>
@@ -248,6 +245,12 @@ footer{text-align:center;padding:28px 20px 40px}
   var IMG_STOP = ASSET_PATH + 'GJ_stopMusicBtn_001.png';
   var IMG_DL   = ASSET_PATH + 'GJ_downloadBtn_001.png';
 
+  // preload all three sprites so play→stop swap is instant
+  [IMG_PLAY, IMG_STOP, IMG_DL].forEach(function (src) {
+    var img = new Image();
+    img.src = src;
+  });
+
   var PALETTE = [
     '#00cfff','#ff8c42','#69f0ae','#ffd740','#ff5252','#ff6d00','#d7ccc8',
     '#ff6b6b','#82b1ff','#90caf9','#ea80fc','#ccff90','#ffe57f','#e040fb',
@@ -296,7 +299,7 @@ footer{text-align:center;padding:28px 20px 40px}
   var topCategories = [];
   var catColors = {};
   var subCatMap = {};
-  var catCounts = {};   // pre-computed counts per top category
+  var catCounts = {};
   var filtered = [];
   var displayCount = 0;
   var activeCategory = 'All';
@@ -305,14 +308,14 @@ footer{text-align:center;padding:28px 20px 40px}
   var searchTimer = null;
 
   // cached DOM refs
-  var $grid       = document.getElementById('grid');
-  var $noRes      = document.getElementById('no-results');
-  var $loadRow    = document.getElementById('load-more-row');
-  var $loadBtn    = document.getElementById('btn-load-more');
-  var $searchBox  = document.getElementById('search');
-  var $countLabel = document.getElementById('results-count');
-  var $selCat     = document.getElementById('sel-cat');
-  var $selSub     = document.getElementById('sel-sub');
+  var _grid       = document.getElementById('grid');
+  var _noRes      = document.getElementById('no-results');
+  var _loadRow    = document.getElementById('load-more-row');
+  var _loadBtn    = document.getElementById('btn-load-more');
+  var _searchBox  = document.getElementById('search');
+  var _countLabel = document.getElementById('results-count');
+  var _selCat     = document.getElementById('sel-cat');
+  var _selSub     = document.getElementById('sel-sub');
 
   // all the good stuff
 
@@ -337,8 +340,8 @@ footer{text-align:center;padding:28px 20px 40px}
 
   function markPlaying(card, on) {
     card.classList.toggle('playing', on);
-    var img = card.querySelector('.btn-play');
-    if (img) img.src = on ? IMG_STOP : IMG_PLAY;
+    var btn = card.querySelector('.btn-play');
+    if (btn) btn.classList.toggle('is-stop', on);
   }
 
   window.addEventListener('pagehide', stopCurrent);
@@ -366,8 +369,8 @@ footer{text-align:center;padding:28px 20px 40px}
           '</div>' +
         '</div>' +
         '<div class="card-actions">' +
-          '<img class="btn-play" src="' + IMG_PLAY + '" alt="Play">' +
-          '<a class="btn-dl" href="' + dlUrl + '" download="' + dlFile + '"><img src="' + IMG_DL + '" alt="Download"></a>' +
+          '<div class="btn-play"></div>' +
+          '<a class="btn-dl" href="' + dlUrl + '" download="' + dlFile + '"></a>' +
         '</div>' +
         '<div class="card-footer">' +
           '<div class="wave-bars"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>' +
@@ -382,7 +385,7 @@ footer{text-align:center;padding:28px 20px 40px}
   // filter
 
   function applyFilter() {
-    var q = $searchBox.value.toLowerCase().trim();
+    var q = _searchBox.value.toLowerCase().trim();
     filtered = allSounds.filter(function (s) {
       if (activeCategory !== 'All' && s.category !== activeCategory && s.topCat !== activeCategory) return false;
       if (q && s._name.indexOf(q) === -1 && s._cat.indexOf(q) === -1 && s.orig.indexOf(q) === -1) return false;
@@ -393,7 +396,7 @@ footer{text-align:center;padding:28px 20px 40px}
 
   function render() {
     applyFilter();
-    $grid.innerHTML = '';
+    _grid.innerHTML = '';
     displayCount = 0;
     showMore();
   }
@@ -406,20 +409,20 @@ footer{text-align:center;padding:28px 20px 40px}
       var s = filtered[i];
       frag.appendChild(makeCard(s, catColors[s.topCat] || 'rgba(255,255,255,0.3)', false));
     }
-    $grid.appendChild(frag);
+    _grid.appendChild(frag);
     displayCount = end;
 
-    $noRes.style.display  = filtered.length ? 'none' : 'block';
-    $grid.style.display   = filtered.length ? '' : 'none';
+    _noRes.style.display  = filtered.length ? 'none' : 'block';
+    _grid.style.display   = filtered.length ? '' : 'none';
 
     if (displayCount < filtered.length) {
-      $loadRow.style.display = '';
-      $loadBtn.textContent = 'Load More (' + (filtered.length - displayCount).toLocaleString() + ' remaining)';
+      _loadRow.style.display = '';
+      _loadBtn.textContent = 'Load More (' + (filtered.length - displayCount).toLocaleString() + ' remaining)';
     } else {
-      $loadRow.style.display = 'none';
+      _loadRow.style.display = 'none';
     }
 
-    $countLabel.innerHTML =
+    _countLabel.innerHTML =
       'Showing <strong>' + displayCount.toLocaleString() + '</strong> of <strong>' + filtered.length.toLocaleString() + '</strong> sounds';
   }
 
@@ -431,36 +434,36 @@ footer{text-align:center;padding:28px 20px 40px}
       catCounts[s.category] = (catCounts[s.category] || 0) + 1;
     });
 
-    $selCat.innerHTML = '<option value="All">All Categories</option>';
+    _selCat.innerHTML = '<option value="All">All Categories</option>';
     topCategories.forEach(function (top) {
       var opt = document.createElement('option');
       opt.value = top;
       opt.textContent = top + ' (' + (catCounts[top] || 0).toLocaleString() + ')';
-      $selCat.appendChild(opt);
+      _selCat.appendChild(opt);
     });
 
-    $selCat.addEventListener('change', function () {
-      var top = $selCat.value;
-      $selSub.innerHTML = '<option value="All">All Subcategories</option>';
+    _selCat.addEventListener('change', function () {
+      var top = _selCat.value;
+      _selSub.innerHTML = '<option value="All">All Subcategories</option>';
 
       if (top !== 'All' && subCatMap[top] && subCatMap[top].length) {
-        $selSub.disabled = false;
+        _selSub.disabled = false;
         subCatMap[top].forEach(function (sub) {
           var fullCat = top + ' / ' + sub;
           var opt = document.createElement('option');
           opt.value = fullCat;
           opt.textContent = sub + ' (' + (catCounts[fullCat] || 0).toLocaleString() + ')';
-          $selSub.appendChild(opt);
+          _selSub.appendChild(opt);
         });
       } else {
-        $selSub.disabled = true;
+        _selSub.disabled = true;
       }
       activeCategory = top;
       render();
     });
 
-    $selSub.addEventListener('change', function () {
-      activeCategory = $selSub.value === 'All' ? $selCat.value : $selSub.value;
+    _selSub.addEventListener('change', function () {
+      activeCategory = _selSub.value === 'All' ? _selCat.value : _selSub.value;
       render();
     });
   }
@@ -496,7 +499,7 @@ footer{text-align:center;padding:28px 20px 40px}
 
   // eventssss
 
-  $grid.addEventListener('click', function (e) {
+  _grid.addEventListener('click', function (e) {
     var btn = e.target.closest('.btn-play');
     if (btn) togglePlay(btn.closest('.card').dataset.url, btn.closest('.card'));
   });
@@ -506,12 +509,12 @@ footer{text-align:center;padding:28px 20px 40px}
     if (btn) togglePlay(btn.closest('.card').dataset.url, btn.closest('.card'));
   });
 
-  $searchBox.addEventListener('input', function () {
+  _searchBox.addEventListener('input', function () {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(render, 300);
   });
 
-  $loadBtn.addEventListener('click', showMore);
+  _loadBtn.addEventListener('click', showMore);
 
   document.getElementById('native-search').addEventListener('input', function (e) {
     renderNative(e.target.value);
